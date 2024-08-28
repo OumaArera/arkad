@@ -125,7 +125,9 @@ const Footer = () => {
 
               {formData.participation === 'donate' && (
                 <>
-                  <p className="text-sm mb-2">Send your donation to: +254 791 693 221</p>
+                  <p className="text-lg font-semibold text-black">
+                    Mpesa: <span className="text-black">+254 791 693 221</span>
+                  </p>
                   <input
                     type="text"
                     name="mpesaCode"

@@ -1,22 +1,25 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom'; 
+import { Link, useLocation } from 'react-router-dom';
 import logo from './images/logo.png';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation(); // Hook to get the current route
-  
+  const location = useLocation();
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const closeMenu = () => {
+    setIsOpen(false);
   };
 
   return (
     <header className="fixed top-0 left-0 w-full bg-[#006D5B] text-white z-50 shadow-lg">
       <div className="container mx-auto px-4 py-3">
-        {/* Bottom section with logo and text */}
         <div className="flex justify-between items-center">
           <div className="flex items-center">
-            <Link to="/"> {/* Link for the logo to Home */}
+            <Link to="/" onClick={closeMenu}> {/* Close menu when logo is clicked */}
               <img src={logo} alt="Ark Family Logo" className="h-16" />
             </Link>
             <div className="hidden md:flex items-center ml-4">
@@ -26,7 +29,6 @@ const Header = () => {
             </div>
           </div>
 
-          {/* Toggle button for mobile menu */}
           <button
             className="md:hidden text-white focus:outline-none"
             onClick={toggleMenu}
@@ -48,7 +50,6 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Optional collapsible tagline for small screens */}
         <div className="md:hidden mt-2">
           <p className="text-xs mt-2">
             Empowering Africa's socio-economic growth through mentorship, collaboration, and sustainable innovation
@@ -56,7 +57,6 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Navigation links */}
       <nav
         className={`${
           isOpen ? 'block' : 'hidden'
@@ -64,6 +64,7 @@ const Header = () => {
       >
         <Link
           to="/"
+          onClick={closeMenu}
           className={`block py-2 md:py-0 md:inline-block md:ml-48 ${
             location.pathname === '/' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
           }`}
@@ -72,6 +73,7 @@ const Header = () => {
         </Link>
         <Link
           to="/about-us"
+          onClick={closeMenu}
           className={`block py-2 md:py-0 md:inline-block ${
             location.pathname === '/about-us' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
           }`}
@@ -80,6 +82,7 @@ const Header = () => {
         </Link>
         <Link
           to="/departments"
+          onClick={closeMenu}
           className={`block py-2 md:py-0 md:inline-block ${
             location.pathname === '/departments' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
           }`}
@@ -88,6 +91,7 @@ const Header = () => {
         </Link>
         <Link
           to="/events-activities"
+          onClick={closeMenu}
           className={`block py-2 md:py-0 md:inline-block ${
             location.pathname === '/events-activities' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
           }`}
@@ -96,6 +100,7 @@ const Header = () => {
         </Link>
         <Link
           to="/media"
+          onClick={closeMenu}
           className={`block py-2 md:py-0 md:inline-block md:mr-32 ${
             location.pathname === '/media' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
           }`}
