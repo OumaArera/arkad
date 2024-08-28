@@ -169,12 +169,12 @@ const Footer = () => {
         {/* Contact Us Section */}
         <div>
           <h3 className="text-lg font-semibold mb-2">Contact Us</h3>
-          <div className="mb-2">
-            <a href="https://wa.me/254791693221" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] flex items-center mb-2">
-              <FaWhatsapp className="mr-2" /> WhatsApp: +254 791 693 221
+          <div className="flex flex-col items-center md:items-start mb-4">
+            <a href="https://wa.me/254791693221" target="_blank" rel="noopener noreferrer" className="flex items-center mb-2">
+              <FaWhatsapp className="mr-2 text-[#FFD700]" />+254 791 693 221
             </a>
-            <a href="tel:+254791693221" className="text-[#FFD700] flex items-center mb-2">
-              <FaPhone className="mr-2" /> Call: +254 791 693 221
+            <a href="tel:+254791693221" className="flex items-center mb-2">
+              <FaPhone className="mr-2 text-[#FFD700]" />+254 791 693 221
             </a>
           </div>
           <div className="flex justify-center md:justify-start space-x-4">
@@ -195,7 +195,7 @@ const Footer = () => {
       </div>
 
       <div className="text-center text-sm mt-4">
-        © {getCurrentYear()} Arkad. All rights reserved.
+        © {getCurrentYear()} Arkad Family. All rights reserved.
       </div>
     </footer>
   );

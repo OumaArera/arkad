@@ -10,7 +10,7 @@ import Footer from './Footer';
 
 function App() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div style={{ paddingTop: '120px' }} className="flex flex-col min-h-screen">
       <Router>
         <Header />
         <main className="flex-grow">

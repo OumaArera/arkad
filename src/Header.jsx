@@ -1,19 +1,18 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; 
+import { Link, useLocation } from 'react-router-dom'; 
 import logo from './images/logo.png';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const location = useLocation(); // Hook to get the current route
+  
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
 
-
   return (
     <header className="fixed top-0 left-0 w-full bg-[#006D5B] text-white z-50 shadow-lg">
       <div className="container mx-auto px-4 py-3">
-
         {/* Bottom section with logo and text */}
         <div className="flex justify-between items-center">
           <div className="flex items-center">
@@ -51,11 +50,9 @@ const Header = () => {
 
         {/* Optional collapsible tagline for small screens */}
         <div className="md:hidden mt-2">
-          
-            <p className="text-xs mt-2">
-              Empowering Africa's socio-economic growth through mentorship, collaboration, and sustainable innovation
-            </p>
-          
+          <p className="text-xs mt-2">
+            Empowering Africa's socio-economic growth through mentorship, collaboration, and sustainable innovation
+          </p>
         </div>
       </div>
 
@@ -67,31 +64,41 @@ const Header = () => {
       >
         <Link
           to="/"
-          className="block py-2 md:py-0 md:inline-block md:ml-48"
+          className={`block py-2 md:py-0 md:inline-block md:ml-48 ${
+            location.pathname === '/' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
+          }`}
         >
           Home
         </Link>
         <Link
           to="/about-us"
-          className="block py-2 md:py-0 md:inline-block"
+          className={`block py-2 md:py-0 md:inline-block ${
+            location.pathname === '/about-us' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
+          }`}
         >
           About Us
         </Link>
         <Link
           to="/departments"
-          className="block py-2 md:py-0 md:inline-block"
+          className={`block py-2 md:py-0 md:inline-block ${
+            location.pathname === '/departments' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
+          }`}
         >
           Departments
         </Link>
         <Link
           to="/events-activities"
-          className="block py-2 md:py-0 md:inline-block"
+          className={`block py-2 md:py-0 md:inline-block ${
+            location.pathname === '/events-activities' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
+          }`}
         >
           Events & Activities
         </Link>
         <Link
           to="/media"
-          className="block py-2 md:py-0 md:inline-block md:mr-32"
+          className={`block py-2 md:py-0 md:inline-block md:mr-32 ${
+            location.pathname === '/media' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
+          }`}
         >
           Media
         </Link>
