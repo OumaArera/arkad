@@ -84,11 +84,11 @@ const EventsAndActivities = () => {
     <h2 className="text-3xl font-bold mb-6">Upcoming Events and Activities</h2>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {events.map((event) => (
-        <div key={event.id} className="bg-white shadow-lg rounded-lg p-4">
+        <div key={event.id} className="bg-white shadow-lg rounded-lg p-4 ">
             <img
             src={event.image}
             alt={event.description}
-            className="w-full h-40 object-cover rounded-lg mb-4"
+            className="w-full h-40 object-cover rounded-lg mb-4 transform transition-transform hover:scale-105"
             />
             <h3 className="text-xl font-semibold mb-2">{event.description}</h3>
             <p className="text-gray-600 mb-2">{event.venue}</p>
