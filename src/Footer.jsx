@@ -129,7 +129,7 @@ const Footer = () => {
             <a href="https://linkedin.com/company/arkadsmp" target="_blank" rel="noopener noreferrer" className="text-[#FFD700]">
               <FaLinkedin className="text-2xl" />
             </a>
-            <a href="https://facebook.com/ArkadSMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700]">
+            <a href="https://facebook.com/arkadsic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700]">
               <FaFacebook className="text-2xl" />
             </a>
             <a href="https://instagram.com/arkad_sic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700]">

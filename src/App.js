@@ -8,8 +8,9 @@ import Media from './Media';
 import Header from './Header';
 import Footer from './Footer';
 import Achievements from './Achievements';
+import './App.css'
 
-function App() {
+const App=() =>{
   return (
     <div style={{ paddingTop: '120px' }} className="flex flex-col min-h-screen">
       <Router>
