@@ -7,6 +7,7 @@ import EventsAndActivities from './EventsAndActivities';
 import Media from './Media';
 import Header from './Header';
 import Footer from './Footer';
+import Achievements from './Achievements';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
             <Route path="/departments" element={<Departments />} />
             <Route path="/events-activities" element={<EventsAndActivities />} />
             <Route path="/media" element={<Media />} />
+            <Route path="/achievement/:id" element={<Achievements />} />
           </Routes>
         </main>
         <Footer />
