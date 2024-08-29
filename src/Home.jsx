@@ -2,10 +2,14 @@ import React, { useState } from 'react';
 import Support from './partners/Support';
 import Join from './partners/Join';
 import Partner from './partners/Partner';
-import background from "./images/pexels-minan1398-1006121.jpg";
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom'; 
+import africa from './images/africa.jpg';
+import Modal from './Modal'; // Import the Modal component
 
 const Home = () => {
   const [formType, setFormType] = useState(null);
+  const navigate = useNavigate(); // to handle navigation
 
   const handleFormType = (type) => {
     setFormType(type);
@@ -26,49 +30,98 @@ const Home = () => {
 
   return (
     <div
-      className="relative p-6 min-h-screen bg-fixed"
-      style={{
-        backgroundImage: `url(${background})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
+      className="relative p-6 min-h-screen bg-cover bg-center text-black overflow-hidden"
+      style={{ backgroundImage: `url(${africa})` }} 
     >
-      {/* Adding a semi-transparent overlay */}
-      <div className="absolute inset-0 bg-black/50"></div>
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black opacity-50"></div>
 
-      <div className="relative z-10">
-        <header className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-[#FFD700]/90 bg-[#006D5B]/70 p-4 rounded shadow-md">
-            Arkad Social Mentorship Program
-          </h1>
-          <p className="text-lg text-[#FFD700]/90 bg-[#006D5B]/70 p-4 rounded shadow-md">
-            Leading Africa towards socio-economic independence through mentorship, collaboration, and sustainable innovation.
-          </p>
-        </header>
+      <div className="relative z-10 text-center">
+        <motion.h1
+          className="text-5xl font-extrabold text-white"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          Leading Africa towards socio-economic independence through mentorship, collaboration, and sustainable innovation.
+        </motion.h1>
 
-        <div className="text-center mb-8 space-y-4 md:space-y-0 md:space-x-4 flex flex-col md:flex-row justify-center items-center">
-          <button
-            onClick={() => handleFormType('support')}
-            className="bg-[#FFD700]/80 text-black px-4 py-2 rounded-md shadow hover:bg-[#FFD700]/90 w-full md:w-auto"
-          >
-            Support Us
-          </button>
-          <button
-            onClick={() => handleFormType('join')}
-            className="bg-[#FFD700]/80 text-black px-4 py-2 rounded-md shadow hover:bg-[#FFD700]/90 w-full md:w-auto"
-          >
-            Join Us
-          </button>
-          <button
-            onClick={() => handleFormType('partner')}
-            className="bg-[#FFD700]/80 text-black px-4 py-2 rounded-md shadow hover:bg-[#FFD700]/90 w-full md:w-auto"
-          >
-            Partner with Us
-          </button>
+        <motion.button
+          onClick={() => navigate('/about-us')}
+          className="mt-6 bg-white text-[#006D5B] px-8 py-3 rounded-full shadow-lg transform transition-transform hover:scale-105"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          Learn More
+        </motion.button>
+
+        <div className="mt-12 p-6 bg-white rounded-lg shadow-xl space-y-8 md:space-y-0 md:flex md:space-x-8 justify-center items-start">
+          <div className="flex flex-col items-center text-center">
+            <motion.div
+              className="text-[#006D5B] text-4xl"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              {/* Add your icon here, e.g., <i className="fas fa-hands-helping"></i> */}
+            </motion.div>
+            <p className="mt-4 font-bold text-lg">Make a donation to our programs</p>
+            <motion.button
+              onClick={() => handleFormType('support')}
+              className="mt-4 bg-[#006D5B] text-white px-6 py-3 rounded-lg shadow-lg transform transition-transform hover:scale-105"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Support Us
+            </motion.button>
+          </div>
+          
+          <div className="flex flex-col items-center text-center">
+            <motion.div
+              className="text-[#006D5B] text-4xl"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              {/* Add your icon here, e.g., <i className="fas fa-users"></i> */}
+            </motion.div>
+            <p className="mt-4 font-bold text-lg">Join our cause today</p>
+            <motion.button
+              onClick={() => handleFormType('join')}
+              className="mt-4 bg-[#006D5B] text-white px-6 py-3 rounded-lg shadow-lg transform transition-transform hover:scale-105"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Join Us
+            </motion.button>
+          </div>
+
+          <div className="flex flex-col items-center text-center">
+            <motion.div
+              className="text-[#006D5B] text-4xl"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              {/* Add your icon here, e.g., <i className="fas fa-handshake"></i> */}
+            </motion.div>
+            <p className="mt-4 font-bold text-lg">Become a partner with us</p>
+            <motion.button
+              onClick={() => handleFormType('partner')}
+              className="mt-4 bg-[#006D5B] text-white px-6 py-3 rounded-lg shadow-lg transform transition-transform hover:scale-105"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Partner with Us
+            </motion.button>
+          </div>
         </div>
-
-        {renderForm()}
       </div>
+
+      {/* Render the Modal */}
+      <Modal isOpen={!!formType} onClose={() => setFormType(null)}>
+        {renderForm()}
+      </Modal>
     </div>
   );
 };

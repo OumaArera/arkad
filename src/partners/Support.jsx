@@ -68,7 +68,7 @@ const Support = () => {
           </p>
         </div>
 
-        <button type="submit" className="bg-[#FFD700] text-black px-4 py-2 rounded-md">
+        <button type="submit" className="bg-green-800 hover:bg-green-700 text-black px-4 py-2 rounded-md">
           Submit
         </button>
       </form>
