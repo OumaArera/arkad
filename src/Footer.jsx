@@ -21,6 +21,7 @@ const Footer = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState('');
+  const [newsletterEmail, setNewsletterEmail] = useState('');
 
   const formRef = useRef(null);
 
@@ -75,6 +76,16 @@ const Footer = () => {
     });
   };
 
+  const handleNewsletterChange = (e) => {
+    setNewsletterEmail(e.target.value);
+  };
+
+  const handleNewsletterSubmit = (e) => {
+    e.preventDefault();
+    console.log('Newsletter email:', newsletterEmail);
+    // You can add further actions, like sending the email to an API
+  };
+
   const validateForm = () => {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phonePattern = /^\+?[0-9]{10,13}$/;
@@ -95,7 +106,7 @@ const Footer = () => {
               <img
                 src={partners[currentPartner].img}
                 alt="Partner logo"
-                className="w-32 h-32 object-contain rounded-lg shadow-md"
+                className="w-32 h-32 object-contain rounded-lg shadow-md transform transition-transform hover:scale-110"
               />
             </a>
           </div>
@@ -112,7 +123,7 @@ const Footer = () => {
           <h3 className="text-lg font-semibold mb-2">Contact Us</h3>
           <button
             onClick={() => setShowContactForm(true)}
-            className="bg-[#FFD700] text-black px-4 py-2 rounded-md mb-4"
+            className="bg-[#FFD700] text-black px-4 py-2 transform transition-transform hover:scale-105 rounded-md mb-4"
           >
             Get in Touch
           </button>
@@ -125,26 +136,50 @@ const Footer = () => {
             </a>
           </div>
 
-          <div className="flex justify-center md:justify-start space-x-4 mt-4">
-            <a href="https://linkedin.com/company/arkadsmp" target="_blank" rel="noopener noreferrer" className="text-[#FFD700]">
+          {/* Social Media Icons */}
+          <div className="flex justify-center  md:justify-start space-x-4 mt-4">
+            <a href="https://linkedin.com/company/arkadsmp" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaLinkedin className="text-2xl" />
             </a>
-            <a href="https://facebook.com/arkadsic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700]">
+            <a href="https://facebook.com/arkadsic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaFacebook className="text-2xl" />
             </a>
-            <a href="https://instagram.com/arkad_sic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700]">
+            <a href="https://instagram.com/arkad_sic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaInstagram className="text-2xl" />
             </a>
-            <a href="https://tiktok.com/@Arkad_SMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700]">
+            <a href="https://tiktok.com/@Arkad_SMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaTiktok className="text-2xl" />
             </a>
-            <a href="https://x.com/ArkadSMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700]">
+            <a href="https://x.com/ArkadSMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaTwitter className="text-2xl" />
             </a>
-            <a href="https://youtube.com/@arkadsmp" target="_blank" rel="noopener noreferrer" className="text-[#FFD700]">
+            <a href="https://youtube.com/@arkadsmp" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaYoutube className="text-2xl" />
             </a>
           </div>
+        </div>
+
+        {/* Newsletter Subscription Section */}
+        <div className="mt-6 md:mt-0">
+          <h3 className="text-lg font-semibold mb-2">Subscribe to our Newsletter</h3>
+          <form onSubmit={handleNewsletterSubmit} className="flex flex-col md:flex-row items-center">
+            <input
+              type="email"
+              name="newsletterEmail"
+              value={newsletterEmail}
+              onChange={handleNewsletterChange}
+              placeholder="Enter your email"
+              className="p-2 mb-2 md:mb-0 md:mr-2 w-full md:w-auto border border-gray-300 rounded bg-white text-black"
+              required
+            />
+            <button
+              type="submit"
+              className="bg-[#FFD700] text-black px-4 transform transition-transform hover:scale-105 py-2 rounded-md"
+            >
+              Subscribe
+            </button>
+          </form>
+
         </div>
       </div>
 
@@ -182,7 +217,7 @@ const Footer = () => {
                 required
               />
               <input
-                type="text"
+                type="tel"
                 name="phoneNumber"
                 value={formData.phoneNumber}
                 onChange={handleInputChange}
@@ -194,21 +229,21 @@ const Footer = () => {
                 name="message"
                 value={formData.message}
                 onChange={handleInputChange}
-                placeholder="Your Message"
+                placeholder="Your message"
                 className="block w-full mb-2 p-2 border border-gray-300 rounded"
                 rows="4"
                 required
               />
               <button
                 type="submit"
-                className={`bg-[#006D5B] text-white px-4 py-2 rounded-md w-full ${!validateForm() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className="bg-[#006D5B] text-white px-4 py-2 rounded-md"
                 disabled={!validateForm() || isSubmitting}
               >
-                {isSubmitting ? 'Submitting...' : 'Submit'}
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
               {submissionStatus && (
-                <div className="mt-4 text-center">
-                  <p className="text-sm">{submissionStatus}</p>
+                <div className={`mt-2 text-sm ${submissionStatus.includes('Success') ? 'text-green-500' : 'text-red-500'}`}>
+                  {submissionStatus}
                 </div>
               )}
             </form>

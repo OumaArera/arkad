@@ -20,7 +20,7 @@ const Achievements = () => {
                     key={idx}
                     src={img}
                     alt="Activity"
-                    className="rounded-lg transition-transform duration-300 ease-in-out transform hover:scale-150"
+                    className="rounded-lg transition-transform duration-300 ease-in-out transform hover:scale-125"
                     style={{ width: "200px", height: "200px", objectFit: "cover" }}
                   />
                 ))}
