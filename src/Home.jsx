@@ -5,11 +5,14 @@ import Partner from './partners/Partner';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom'; 
 import africa from './images/africa.jpg';
-import Modal from './Modal'; // Import the Modal component
+import Modal from './Modal'; 
+import donate from "./images/donate.png";
+import join from './images/join.png';
+import partner from './images/partner.png';
 
 const Home = () => {
   const [formType, setFormType] = useState(null);
-  const navigate = useNavigate(); // to handle navigation
+  const navigate = useNavigate(); 
 
   const handleFormType = (type) => {
     setFormType(type);
@@ -38,7 +41,7 @@ const Home = () => {
 
       <div className="relative z-10 text-center">
         <motion.h1
-          className="text-5xl font-extrabold text-white"
+          className="text-4xl font-extrabold text-white"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
@@ -58,12 +61,12 @@ const Home = () => {
         <div className="mt-12 p-6 bg-white rounded-lg shadow-xl space-y-8 md:space-y-0 md:flex md:space-x-8 justify-center items-start">
           <div className="flex flex-col items-center text-center">
             <motion.div
-              className="text-[#006D5B] text-4xl"
+              className="w-20 h-20 bg-[#006D5B] rounded-full flex items-center justify-center"
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.5 }}
             >
-              {/* Add your icon here, e.g., <i className="fas fa-hands-helping"></i> */}
+              <img src={donate} alt="Donate Icon" className="w-12 h-12 rounded-full" />
             </motion.div>
             <p className="mt-4 font-bold text-lg">Make a donation to our programs</p>
             <motion.button
@@ -78,12 +81,12 @@ const Home = () => {
           
           <div className="flex flex-col items-center text-center">
             <motion.div
-              className="text-[#006D5B] text-4xl"
+              className="w-20 h-20 bg-[#006D5B] rounded-full flex items-center justify-center"
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.5 }}
             >
-              {/* Add your icon here, e.g., <i className="fas fa-users"></i> */}
+              <img src={join} alt="Join Icon" className="w-12 h-12 rounded-full" />
             </motion.div>
             <p className="mt-4 font-bold text-lg">Join our cause today</p>
             <motion.button
@@ -98,12 +101,12 @@ const Home = () => {
 
           <div className="flex flex-col items-center text-center">
             <motion.div
-              className="text-[#006D5B] text-4xl"
+              className="w-20 h-20 bg-[#006D5B] rounded-full flex items-center justify-center"
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.5 }}
             >
-              {/* Add your icon here, e.g., <i className="fas fa-handshake"></i> */}
+              <img src={partner} alt="Partner Icon" className="w-12 h-12 rounded-full" />
             </motion.div>
             <p className="mt-4 font-bold text-lg">Become a partner with us</p>
             <motion.button
