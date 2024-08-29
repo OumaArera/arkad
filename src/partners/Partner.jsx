@@ -91,7 +91,7 @@ const Partner = () => {
             rows="4"
             required
         ></textarea>
-        <button type="submit" className="bg-green-800 hover:bg-green-700 text-black px-4 py-2 rounded-md">
+        <button type="submit" className="bg-[#006D5B] text-black px-4 py-2 rounded-md transform transition-transform hover:scale-105">
             Submit
         </button>
         </form>
