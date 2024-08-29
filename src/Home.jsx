@@ -58,7 +58,7 @@ const Home = () => {
           Learn More
         </motion.button>
 
-        <div className="mt-12 p-6 bg-white rounded-lg shadow-xl space-y-8 md:space-y-0 md:flex md:space-x-8 justify-center items-start">
+        <div className="mt-12 p-6 rounded-lg shadow-xl space-y-8 md:space-y-0 md:flex md:space-x-8 justify-center items-start">
           <div className="flex flex-col items-center text-center">
             <motion.div
               className="w-20 h-20 bg-[#006D5B] rounded-full flex items-center justify-center"
@@ -68,7 +68,7 @@ const Home = () => {
             >
               <img src={donate} alt="Donate Icon" className="w-12 h-12 rounded-full" />
             </motion.div>
-            <p className="mt-4 font-bold text-lg">Make a donation to our programs</p>
+            <p className="mt-4 font-bold text-white text-lg">Make a donation to our programs</p>
             <motion.button
               onClick={() => handleFormType('support')}
               className="mt-4 bg-[#006D5B] text-white px-6 py-3 rounded-lg shadow-lg transform transition-transform hover:scale-105"
@@ -88,7 +88,7 @@ const Home = () => {
             >
               <img src={join} alt="Join Icon" className="w-12 h-12 rounded-full" />
             </motion.div>
-            <p className="mt-4 font-bold text-lg">Join our cause today</p>
+            <p className="mt-4 font-bold text-white text-lg">Join our cause today</p>
             <motion.button
               onClick={() => handleFormType('join')}
               className="mt-4 bg-[#006D5B] text-white px-6 py-3 rounded-lg shadow-lg transform transition-transform hover:scale-105"
@@ -108,7 +108,7 @@ const Home = () => {
             >
               <img src={partner} alt="Partner Icon" className="w-12 h-12 rounded-full" />
             </motion.div>
-            <p className="mt-4 font-bold text-lg">Become a partner with us</p>
+            <p className="mt-4 font-bold text-white text-lg">Become a partner with us</p>
             <motion.button
               onClick={() => handleFormType('partner')}
               className="mt-4 bg-[#006D5B] text-white px-6 py-3 rounded-lg shadow-lg transform transition-transform hover:scale-105"
