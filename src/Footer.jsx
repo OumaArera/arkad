@@ -153,6 +153,9 @@ const Footer = () => {
             <a href="https://tiktok.com/@Arkad_SMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaTiktok className="text-2xl" />
             </a>
+            <a href="https://x.com/ArkadSMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
+              <FaTwitter className="text-2xl" />
+            </a>
             <a href="https://youtube.com/@arkadfamilysic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaYoutube className="text-2xl" />
             </a>
