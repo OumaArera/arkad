@@ -185,8 +185,9 @@ const Footer = () => {
 
       {/* Contact Form Modal */}
       {showContactForm && (
-        <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div ref={formRef} className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <div className="fixed inset-0 flex justify-center items-center z-50">
+          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+          <div ref={formRef} className="relative bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -195,11 +196,11 @@ const Footer = () => {
                 </label>
                 <input
                   type="text"
-                  id="fullName"
                   name="fullName"
                   value={formData.fullName}
                   onChange={handleInputChange}
-                  className="mt-1 p-2 w-full border border-gray-300 rounded"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-white text-black placeholder-gray-500"
+                  placeholder="Enter your full name"
                   required
                 />
               </div>
@@ -209,11 +210,11 @@ const Footer = () => {
                 </label>
                 <input
                   type="email"
-                  id="email"
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="mt-1 p-2 w-full border border-gray-300 rounded"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-white text-black placeholder-gray-500"
+                  placeholder="Enter your email"
                   required
                 />
               </div>
@@ -223,11 +224,11 @@ const Footer = () => {
                 </label>
                 <input
                   type="tel"
-                  id="phoneNumber"
                   name="phoneNumber"
                   value={formData.phoneNumber}
                   onChange={handleInputChange}
-                  className="mt-1 p-2 w-full border border-gray-300 rounded"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-white text-black placeholder-gray-500"
+                  placeholder="Enter your phone number"
                   required
                 />
               </div>
@@ -236,30 +237,34 @@ const Footer = () => {
                   Message
                 </label>
                 <textarea
-                  id="message"
                   name="message"
                   value={formData.message}
                   onChange={handleInputChange}
-                  className="mt-1 p-2 w-full border border-gray-300 rounded"
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-white text-black placeholder-gray-500"
+                  placeholder="Enter your message"
+                  rows="4"
                   required
                 />
               </div>
-              <div className="text-right">
-                <button
-                  type="submit"
-                  className="bg-[#FFD700] text-black px-4 py-2 rounded-md"
-                  disabled={isSubmitting || !validateForm()}
-                >
-                  {isSubmitting ? 'Sending...' : 'Send Message'}
-                </button>
-              </div>
+              <button
+                type="submit"
+                className={`w-full py-2 px-4 rounded-md text-white ${validateForm() ? 'bg-[#006D5B] hover:bg-opacity-90' : 'bg-gray-500 cursor-not-allowed'}`}
+                disabled={!validateForm() || isSubmitting}
+              >
+                {isSubmitting ? 'Sending...' : 'Submit'}
+              </button>
+              {submissionStatus && <p className="text-center mt-4">{submissionStatus}</p>}
             </form>
-            {submissionStatus && (
-              <p className="mt-4 text-center text-gray-700">{submissionStatus}</p>
-            )}
+            <button
+              onClick={() => setShowContactForm(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+            >
+              &times;
+            </button>
           </div>
         </div>
       )}
+
       <div className="mt-6">
         <div className="w-full h-1 hover:bg-[#FFD700] bg-white mb-4"></div>
         <div className="flex justify-center items-center">
