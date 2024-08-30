@@ -96,7 +96,7 @@ const Footer = () => {
 
   return (
     <footer className="relative bg-[#006D5B] text-white p-6">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 text-center md:text-left">
         
         {/* Partners Section */}
         <div className="flex flex-col items-center">
@@ -116,6 +116,9 @@ const Footer = () => {
         <div className="flex flex-col items-center">
           <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
           <Link to="/events-activities" className="text-[#FFD700]">Events & Activities</Link>
+          <Link to="/media" className="text-[#FFD700]">Media Gallery</Link>
+          <Link to="/departments" className="text-[#FFD700]">Our Departments</Link>
+          <Link to="/about-us" className="text-[#FFD700]">About Arkad Family</Link>
         </div>
 
         {/* Contact Us Section */}
@@ -137,7 +140,7 @@ const Footer = () => {
           </div>
 
           {/* Social Media Icons */}
-          <div className="flex justify-center  md:justify-start space-x-4 mt-4">
+          <div className="flex justify-center md:justify-start space-x-4 mt-4">
             <a href="https://linkedin.com/company/arkadsmp" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaLinkedin className="text-2xl" />
             </a>
@@ -150,19 +153,16 @@ const Footer = () => {
             <a href="https://tiktok.com/@Arkad_SMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaTiktok className="text-2xl" />
             </a>
-            <a href="https://x.com/ArkadSMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
-              <FaTwitter className="text-2xl" />
-            </a>
-            <a href="https://youtube.com/@arkadsmp" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
+            <a href="https://youtube.com/@arkadfamilysic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaYoutube className="text-2xl" />
             </a>
           </div>
         </div>
 
         {/* Newsletter Subscription Section */}
-        <div className="mt-6 md:mt-0">
-          <h3 className="text-lg font-semibold mb-2">Subscribe to our Newsletter</h3>
-          <form onSubmit={handleNewsletterSubmit} className="flex flex-col md:flex-row items-center">
+        <div className="mt-6 md:mt-0 md:col-span-3 lg:col-span-1">
+          <h3 className="text-lg font-semibold mb-2 text-center md:text-left">Subscribe to our Newsletter</h3>
+          <form onSubmit={handleNewsletterSubmit} className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start">
             <input
               type="email"
               name="newsletterEmail"
@@ -174,82 +174,99 @@ const Footer = () => {
             />
             <button
               type="submit"
-              className="bg-[#FFD700] text-black px-4 transform transition-transform hover:scale-105 py-2 rounded-md"
+              className="bg-[#FFD700] text-black px-4 py-2 transform transition-transform hover:scale-105 rounded-md"
             >
               Subscribe
             </button>
           </form>
-
         </div>
+
       </div>
 
-      <div className="text-center text-sm mt-4">
-        © {getCurrentYear()} Arkad Family. All rights reserved.
-      </div>
-
+      {/* Contact Form Modal */}
       {showContactForm && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-          <div ref={formRef} className="bg-white p-8 rounded-lg shadow-lg text-black w-96 relative">
-            <button
-              onClick={() => setShowContactForm(false)}
-              className="absolute top-2 right-2 text-gray-600 hover:text-black"
-            >
-              ×
-            </button>
+        <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div ref={formRef} className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleInputChange}
-                placeholder="Full Name"
-                className="block w-full mb-2 p-2 border border-gray-300 rounded"
-                required
-              />
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="Email"
-                className="block w-full mb-2 p-2 border border-gray-300 rounded"
-                required
-              />
-              <input
-                type="tel"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleInputChange}
-                placeholder="Phone Number"
-                className="block w-full mb-2 p-2 border border-gray-300 rounded"
-                required
-              />
-              <textarea
-                name="message"
-                value={formData.message}
-                onChange={handleInputChange}
-                placeholder="Your message"
-                className="block w-full mb-2 p-2 border border-gray-300 rounded"
-                rows="4"
-                required
-              />
-              <button
-                type="submit"
-                className="bg-[#006D5B] text-white px-4 py-2 rounded-md"
-                disabled={!validateForm() || isSubmitting}
-              >
-                {isSubmitting ? 'Sending...' : 'Send Message'}
-              </button>
-              {submissionStatus && (
-                <div className={`mt-2 text-sm ${submissionStatus.includes('Success') ? 'text-green-500' : 'text-red-500'}`}>
-                  {submissionStatus}
-                </div>
-              )}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="fullName" className="block font-medium text-gray-700">
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  id="fullName"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleInputChange}
+                  className="mt-1 p-2 w-full border border-gray-300 rounded"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="email" className="block font-medium text-gray-700">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="mt-1 p-2 w-full border border-gray-300 rounded"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="phoneNumber" className="block font-medium text-gray-700">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  value={formData.phoneNumber}
+                  onChange={handleInputChange}
+                  className="mt-1 p-2 w-full border border-gray-300 rounded"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="message" className="block font-medium text-gray-700">
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  className="mt-1 p-2 w-full border border-gray-300 rounded"
+                  required
+                />
+              </div>
+              <div className="text-right">
+                <button
+                  type="submit"
+                  className="bg-[#FFD700] text-black px-4 py-2 rounded-md"
+                  disabled={isSubmitting || !validateForm()}
+                >
+                  {isSubmitting ? 'Sending...' : 'Send Message'}
+                </button>
+              </div>
             </form>
+            {submissionStatus && (
+              <p className="mt-4 text-center text-gray-700">{submissionStatus}</p>
+            )}
           </div>
         </div>
       )}
+      <div className="mt-6">
+        <div className="w-full h-1 hover:bg-[#FFD700] bg-white mb-4"></div>
+        <div className="flex justify-center items-center">
+          <p className="text-sm">&copy; {getCurrentYear()} Arkad Social Mentorship Program. All Rights Reserved.</p>
+        </div>
+      </div>
+
     </footer>
   );
 };
