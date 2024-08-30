@@ -87,13 +87,13 @@ const EventsAndActivities = () => {
             <p className="text-gray-600 mb-4">{event.date}</p>
             <button
               onClick={() => handleParticipate(event)}
-              className="bg-[#006D5B] text-white px-4 py-2 rounded-md mb-2 mr-2"
+              className="bg-[#006D5B] text-white px-4 py-2 rounded-md mb-2 mr-2 transform transition-transform hover:scale-105"
             >
               Participate
             </button>
             <button
               onClick={() => handleSetReminder(event)}
-              className="bg-[#FFD700] text-black px-4 py-2 rounded-md"
+              className="bg-[#FFD700] text-black px-4 py-2 rounded-md transform transition-transform hover:scale-105"
             >
               Set Reminder
             </button>
@@ -107,13 +107,13 @@ const EventsAndActivities = () => {
           <h3 className="text-2xl font-bold mb-4">How would you like to participate?</h3>
           <button
             onClick={() => handleAction('volunteer')}
-            className="bg-[#006D5B] text-white px-6 py-3 rounded-md mb-4 mr-2"
+            className="bg-[#006D5B] text-white px-6 py-3 rounded-md mb-4 mr-2 transform transition-transform hover:scale-105"
           >
             Volunteer
           </button>
           <button
             onClick={() => handleAction('donate')}
-            className="bg-[#FFD700] text-black px-6 py-3 rounded-md"
+            className="bg-[#FFD700] text-black px-6 py-3 rounded-md transform transition-transform hover:scale-105"
           >
             Donate
           </button>
