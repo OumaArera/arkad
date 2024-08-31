@@ -8,6 +8,7 @@ import Media from './Media';
 import Header from './Header';
 import Footer from './Footer';
 import Achievements from './Achievements';
+import Leadership from './Leadership';
 import './App.css'
 
 const App=() =>{
@@ -23,6 +24,7 @@ const App=() =>{
             <Route path="/events-activities" element={<EventsAndActivities />} />
             <Route path="/media" element={<Media />} />
             <Route path="/achievement/:id" element={<Achievements />} />
+            <Route path="/leadership" element={<Leadership />} />
           </Routes>
         </main>
         <Footer />

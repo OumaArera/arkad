@@ -22,11 +22,14 @@ const Header = () => {
             <Link to="/" onClick={closeMenu}> {/* Close menu when logo is clicked */}
               <img src={logo} alt="Ark Family Logo" className="h-16" />
             </Link>
-            <div className="hidden md:flex items-center ml-4">
-              <p className="text-base md:text-lg">
-                Empowering Africa's socio-economic growth through mentorship, collaboration, and sustainable innovation
-              </p>
-            </div>
+            <div className="text-base md:text-lg">
+                <p>
+                  Empowering Africa's socio-economic growth through mentorship, collaboration, and sustainable innovation
+                </p>
+                <p className="text-xs flex justify-center italic mt-2">
+                  Kataa ufukara
+                </p>
+              </div>
           </div>
 
           <button
@@ -54,6 +57,9 @@ const Header = () => {
           <p className="text-xs mt-2">
             Empowering Africa's socio-economic growth through mentorship, collaboration, and sustainable innovation
           </p>
+          <p className="text-xs italic mt-2">
+            Kataa ufukara
+          </p>
         </div>
       </div>
 
@@ -79,6 +85,15 @@ const Header = () => {
           }`}
         >
           About Us
+        </Link>
+        <Link
+          to="/leadership"
+          onClick={closeMenu}
+          className={`block py-2 md:py-0 md:inline-block ${
+            location.pathname === '/about-us' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
+          }`}
+        >
+          Our Leadership
         </Link>
         <Link
           to="/departments"

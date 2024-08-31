@@ -17,6 +17,7 @@ const Volunteer = () => {
     e.preventDefault();
     console.log('Volunteer information:', formData);
     // Further logic to handle form submission
+    // Email andlocation optional
   };
 
   return (
@@ -47,7 +48,7 @@ const Volunteer = () => {
         onChange={handleChange}
         placeholder="Email"
         className="p-2 mb-4 border border-gray-300 rounded"
-        required
+        
       />
       <input
         type="text"
@@ -56,7 +57,7 @@ const Volunteer = () => {
         onChange={handleChange}
         placeholder="Location"
         className="p-2 mb-4 border border-gray-300 rounded"
-        required
+        
       />
       <button
         type="submit"
