@@ -123,8 +123,12 @@ const Footer = () => {
     if(!secretKey) return;
     setIsSubmitting(true);
 
+    const data = {
+      email: newsletterEmail
+    }
+
     try {
-      const dataStr = JSON.stringify(newsletterEmail);
+      const dataStr = JSON.stringify(data);
       const iv = CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
       const encryptedData = CryptoJS.AES.encrypt(dataStr, CryptoJS.enc.Utf8.parse(secretKey), {
         iv: CryptoJS.enc.Hex.parse(iv),
