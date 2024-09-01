@@ -60,6 +60,7 @@ const Footer = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(!secretKey) return;
     setIsSubmitting(true);
     const dataToEncrypt={
       fullName: formData.fullName,
@@ -79,9 +80,11 @@ const Footer = () => {
 
       const payload = { iv, ciphertext: encryptedData };
 
+      console.log(payload);
+
       const response = await axios.post(MESSAGE_URL, payload);
 
-      if (response.data.sucess){
+      if(response.data.statusCode === 201){
         setFormData({
           fullName: '',
           email: '',
@@ -321,8 +324,9 @@ const Footer = () => {
               >
                 {isSubmitting ? 'Sending...' : 'Submit'}
               </button>
-              {error && <div className="text-red-500 mt-2 text-sm text-center">{error}</div>}
               {success && (<div className="text-green-600 mt-2 text-sm text-center">{success}</div>)}
+              {error && <div className="text-red-500 mt-2 text-sm text-center">{error}</div>}
+              
             </form>
             <button
               onClick={() => setShowContactForm(false)}
