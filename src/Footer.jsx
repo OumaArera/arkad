@@ -3,6 +3,7 @@ import { FaWhatsapp, FaPhone, FaTwitter, FaFacebook, FaInstagram, FaTiktok, FaLi
 import logo from './images/AfyaLink.png';
 import axios from 'axios';
 import logo2 from "./images/old.png";
+import CryptoJS from 'crypto-js';
 import { Link } from 'react-router-dom';
 
 const secretKey = process.env.REACT_APP_SECRET_KEY;
