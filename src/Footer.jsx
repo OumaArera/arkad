@@ -139,14 +139,15 @@ const Footer = () => {
       if (response.data.success){
         setNewsletterEmail("");
         setTimeout(() => setSuccess(""), 5000);
+        alert(response.data.message);
       }else{
         setError(response.data.message);
         setTimeout(() => setError(""), 5000);
+        alert(response.data.message);
       }
       
     } catch (error) {
-      setError(`There was an error: ${error}`);
-      setTimeout(() => setError(""), 5000);
+      alert(`There was an error: ${error}`);
     }finally{
       setIsSubmitting(false);
     }
@@ -248,8 +249,6 @@ const Footer = () => {
               {isSubmitting? "Sending.." : "Subscribe"}
             </button>
             <br />
-            {error && <div className="text-red-500 mt-2 text-sm text-center">{error}</div>}
-            {success && (<div className="text-green-600 mt-2 text-sm text-center">{success}</div>)}
           </form>
         </div>
 
