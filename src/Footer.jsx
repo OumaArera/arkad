@@ -120,6 +120,7 @@ const Footer = () => {
 
   const handleNewsletterSubmit = async(e) => {
     e.preventDefault();
+    if(!secretKey) return;
     setIsSubmitting(true);
 
     try {
@@ -137,7 +138,6 @@ const Footer = () => {
 
       if (response.data.success){
         setNewsletterEmail("");
-        setSuccess(response.data.message);
         setTimeout(() => setSuccess(""), 5000);
       }else{
         setError(response.data.message);
@@ -245,8 +245,9 @@ const Footer = () => {
               type="submit"
               className="bg-[#FFD700] text-black px-4 py-2 transform transition-transform hover:scale-105 rounded-md"
             >
-              Subscribe
+              {isSubmitting? "Sending.." : "Subscribe"}
             </button>
+            <br />
             {error && <div className="text-red-500 mt-2 text-sm text-center">{error}</div>}
             {success && (<div className="text-green-600 mt-2 text-sm text-center">{success}</div>)}
           </form>
@@ -319,7 +320,7 @@ const Footer = () => {
               </div>
               <button
                 type="submit"
-                className={`w-full py-2 px-4 rounded-md text-white ${validateForm() ? 'bg-[#006D5B] hover:bg-opacity-90' : 'bg-gray-500 cursor-not-allowed'}`}
+                className={`w-full py-2 px-4 rounded-md text-white ${validateForm() ? 'bg-[#006D5B] hover:bg-opacity-90' : 'bg-gray-500 cursor-not-allowed'}` }
                 disabled={!validateForm() || isSubmitting}
               >
                 {isSubmitting ? 'Sending...' : 'Submit'}
