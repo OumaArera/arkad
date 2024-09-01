@@ -1,8 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaWhatsapp, FaPhone, FaTwitter, FaFacebook, FaInstagram, FaTiktok, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import logo from './images/AfyaLink.png';
+import axios from 'axios';
 import logo2 from "./images/old.png";
 import { Link } from 'react-router-dom';
+
+const secretKey = process.env.REACT_APP_SECRET_KEY;
+const MESSAGE_URL ="https://arkad-server.onrender.com/users/message";
+const SUBSCRIPTION_URL = "https://arkad-server.onrender.com/users/subscribe"
 
 const Footer = () => {
   const partners = [
@@ -20,8 +25,9 @@ const Footer = () => {
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submissionStatus, setSubmissionStatus] = useState('');
   const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
 
   const formRef = useRef(null);
 
@@ -54,17 +60,45 @@ const Footer = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+    const dataToEncrypt={
+      fullName: formData.fullName,
+      email: formData.email,
+      phoneNumber: formData.phoneNumber,
+      message: formData.message
+    };
 
-    // Simulate an API call
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate network delay
-      setSubmissionStatus('Success! Your message has been sent.');
-      setFormData({ fullName: '', email: '', phoneNumber: '', message: '' });
+      const dataStr = JSON.stringify(dataToEncrypt);
+      const iv = CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
+      const encryptedData = CryptoJS.AES.encrypt(dataStr, CryptoJS.enc.Utf8.parse(secretKey), {
+        iv: CryptoJS.enc.Hex.parse(iv),
+        padding: CryptoJS.pad.Pkcs7,
+        mode: CryptoJS.mode.CBC,
+      }).toString();
+
+      const payload = { iv, ciphertext: encryptedData };
+
+      const response = await axios.post(MESSAGE_URL, payload);
+
+      if (response.data.sucess){
+        setFormData({
+          fullName: '',
+          email: '',
+          phoneNumber: '',
+          message: '',
+        });
+        setSuccess(response.data.message);
+        setTimeout(() => setSuccess(""), 5000);
+      }else{
+        setError(response.data.message);
+        setTimeout(() => setError(""), 5000);
+      }
+      
     } catch (error) {
-      setSubmissionStatus('Failed to send your message. Please try again.');
+      setError('Failed to send your message. Please try again. ', error);
+      setTimeout(() => setError(""), 5000);
     } finally {
       setIsSubmitting(false);
-      setTimeout(() => setSubmissionStatus(''), 5000); // Clear status message after 5 seconds
     }
   };
 
@@ -80,10 +114,38 @@ const Footer = () => {
     setNewsletterEmail(e.target.value);
   };
 
-  const handleNewsletterSubmit = (e) => {
+  const handleNewsletterSubmit = async(e) => {
     e.preventDefault();
-    console.log('Newsletter email:', newsletterEmail);
-    // You can add further actions, like sending the email to an API
+    setIsSubmitting(true);
+
+    try {
+      const dataStr = JSON.stringify(newsletterEmail);
+      const iv = CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
+      const encryptedData = CryptoJS.AES.encrypt(dataStr, CryptoJS.enc.Utf8.parse(secretKey), {
+        iv: CryptoJS.enc.Hex.parse(iv),
+        padding: CryptoJS.pad.Pkcs7,
+        mode: CryptoJS.mode.CBC,
+      }).toString();
+
+      const payload = { iv, ciphertext: encryptedData };
+
+      const response = await axios.post(SUBSCRIPTION_URL, payload);
+
+      if (response.data.success){
+        setNewsletterEmail("");
+        setSuccess(response.data.message);
+        setTimeout(() => setSuccess(""), 5000);
+      }else{
+        setError(response.data.message);
+        setTimeout(() => setError(""), 5000);
+      }
+      
+    } catch (error) {
+      setError(`There was an error: ${error}`);
+      setTimeout(() => setError(""), 5000);
+    }finally{
+      setIsSubmitting(false);
+    }
   };
 
   const validateForm = () => {
@@ -256,7 +318,8 @@ const Footer = () => {
               >
                 {isSubmitting ? 'Sending...' : 'Submit'}
               </button>
-              {submissionStatus && <p className="text-center mt-4">{submissionStatus}</p>}
+              {error && <div className="text-red-500 mt-2 text-sm text-center">{error}</div>}
+              {success && (<div className="text-green-600 mt-2 text-sm text-center">{success}</div>)}
             </form>
             <button
               onClick={() => setShowContactForm(false)}
