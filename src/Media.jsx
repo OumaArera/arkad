@@ -47,6 +47,7 @@ const Media = () => {
 
   return (
     <div className="p-6">
+      <br />
       <h2 className="text-4xl font-bold text-[#006D5B] mb-8 text-center">Media Gallery</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {currentItems.map((item) => (
