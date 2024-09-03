@@ -22,16 +22,15 @@ const Header = () => {
             <Link to="/" onClick={closeMenu}> {/* Close menu when logo is clicked */}
               <img src={logo} alt="Ark Family Logo" className="h-16" />
             </Link>
-            <div className="hidden md:flex items-center ml-4">
-                <p className="text-base md:text-lg">
-                  Empowering Africa's socio-economic growth through mentorship, collaboration, and sustainable innovation
-                </p>
-                <p className="text-xs md:text-lg flex justify-center italic mt-2">
-                  Kataa ufukara
-                </p>
-              </div>
+            <div className="hidden md:flex flex-col items-center ml-4">
+              <p className="text-base md:text-lg text-center">
+                Empowering Africa's socio-economic growth through mentorship, collaboration, and sustainable innovation
+              </p>
+              <p className="text-xs md:text-lg italic mt-2 text-center">
+                Kataa ufukara
+              </p>
+            </div>
           </div>
-
           <button
             className="md:hidden text-white focus:outline-none"
             onClick={toggleMenu}
