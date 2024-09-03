@@ -90,7 +90,7 @@ const Header = () => {
           to="/leadership"
           onClick={closeMenu}
           className={`block py-2 md:py-0 md:inline-block ${
-            location.pathname === '/about-us' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
+            location.pathname === '/leadership' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
           }`}
         >
           Our Leadership
