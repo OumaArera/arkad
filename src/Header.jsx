@@ -56,7 +56,7 @@ const Header = () => {
           <p className="text-xs mt-2">
             Empowering Africa's socio-economic growth through mentorship, collaboration, and sustainable innovation
           </p>
-          <p className="text-xs italic mt-2">
+          <p className="text-xs flex-col text-center italic mt-2">
             Kataa ufukara
           </p>
         </div>
