@@ -29,20 +29,20 @@ const Partner = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(secretKey) return;
+    if(!secretKey) return;
     setLoading(true);
 
-    try {
-      const data = { 
-        organizationName: formData.organizationName, 
-        email: formData.email, 
-        contactNumber: formData.contact, 
-        organizationType: formData.organizationType, 
-        website: formData.website || null, 
-        location: formData.location, 
-        reasonForPartnership: formData.partnershipDetails
-      };
+    const data = { 
+      organizationName: formData.organizationName, 
+      email: formData.email, 
+      contactNumber: formData.contact, 
+      organizationType: formData.organizationType, 
+      website: formData.website || null, 
+      location: formData.location, 
+      reasonForPartnership: formData.partnershipDetails
+    };
 
+    try {
       const dataStr = JSON.stringify(data);
       const iv = CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
       const encryptedData = CryptoJS.AES.encrypt(dataStr, CryptoJS.enc.Utf8.parse(secretKey), {
