@@ -38,19 +38,19 @@ const Leadership = () => {
       <h2 className="text-4xl flex justify-center font-bold text-[#006D5B] mb-8">
         Meet Our Team
       </h2>
-      <div className="relative w-[950px] mx-auto gap-14"> 
+      <div className="relative w-full max-w-screen-lg mx-auto gap-6"> 
         <div className="flex justify-center">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 pb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-4">
             {currentLeaders.map((leader) => (
               <div
                 key={leader.id}
                 className="bg-white shadow-lg rounded-lg overflow-hidden flex-col transform hover:scale-105 transition-transform duration-300"
               >
-                <div className="h-fit w-full flex items-center justify-center">
+                <div className="w-full h-64 overflow-hidden">
                   <img
                     src={leader.image}
                     alt={leader.name}
-                    className="w-full h-full object-cover" 
+                    className="object-cover w-full h-full" 
                   />
                 </div>
                 <div className="p-4">
