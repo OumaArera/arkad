@@ -1,4 +1,9 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import CryptoJS from 'crypto-js';
+
+const secretKey = process.env.REACT_APP_SECRET_KEY;
+const PARTNER_URL ="https://arkad-server.onrender.com/users/partner";
 
 const Partner = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +15,9 @@ const Partner = () => {
     organizationType: '',
     partnershipDetails: '',
   });
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,9 +27,48 @@ const Partner = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Partner Form Data:', formData);
+    if(secretKey) return;
+    setLoading(true);
+
+    try {
+      const data = { 
+        organizationName: formData.organizationName, 
+        email: formData.email, 
+        contactNumber: formData.contact, 
+        organizationType: formData.organizationType, 
+        website: formData.website || null, 
+        location: formData.location, 
+        reasonForPartnership: formData.partnershipDetails
+      };
+
+      const dataStr = JSON.stringify(data);
+      const iv = CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
+      const encryptedData = CryptoJS.AES.encrypt(dataStr, CryptoJS.enc.Utf8.parse(secretKey), {
+        iv: CryptoJS.enc.Hex.parse(iv),
+        padding: CryptoJS.pad.Pkcs7,
+        mode: CryptoJS.mode.CBC,
+      }).toString();
+
+      const payload = { iv, ciphertext: encryptedData };
+      const response = await axios.post(PARTNER_URL, payload);
+
+      if(response.data.success){
+        setSuccess(response.data.message);
+        setTimeout(() => setSuccess(""), 5000);
+      }else{
+        setError(response.data.message);
+        setTimeout(() => setError(""), 5000);
+      }
+      
+    } catch (error) {
+      setError('Failed to send your message. Please try again. ', error);
+      setTimeout(() => setError(""), 5000);
+    }finally{
+      setLoading(false);
+    }
+    
   };
 
   return (
@@ -91,8 +138,10 @@ const Partner = () => {
             rows="4"
             required
         ></textarea>
+        {success && (<div className="text-green-600 mt-2 text-sm text-center">{success}</div>)}
+        {error && <div className="text-red-500 mt-2 text-sm text-center">{error}</div>}
         <button type="submit" className="bg-[#006D5B] text-black px-4 py-2 rounded-md transform transition-transform hover:scale-105">
-            Submit
+            {loading? "Sending" : "Submit"}
         </button>
         </form>
     </div>
