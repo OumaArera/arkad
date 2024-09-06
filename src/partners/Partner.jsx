@@ -141,7 +141,7 @@ const Partner = () => {
         {success && (<div className="text-green-600 mt-2 text-sm text-center">{success}</div>)}
         {error && <div className="text-red-500 mt-2 text-sm text-center">{error}</div>}
         <button type="submit" className="bg-[#006D5B] text-black px-4 py-2 rounded-md transform transition-transform hover:scale-105">
-            {loading? "Sending" : "Submit"}
+            {loading? "Sending.." : "Submit"}
         </button>
         </form>
     </div>
