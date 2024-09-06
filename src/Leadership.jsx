@@ -45,6 +45,7 @@ const Leadership = () => {
               <div
                 key={leader.id}
                 className="bg-white shadow-lg rounded-lg overflow-hidden flex-col transform hover:scale-105 transition-transform duration-300"
+                style={{ maxWidth: '300px' }} // Set a fixed max-width for the card
               >
                 <div className="w-full h-64 overflow-hidden">
                   <img
@@ -55,7 +56,7 @@ const Leadership = () => {
                 </div>
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-[#006D5B]">{leader.name}</h3>
-                  <p className="text-md font-medium text-black">{leader.role}</p>
+                  <p className="text-md font-medium text-black break-words">{leader.role}</p> {/* Ensure long text wraps */}
                 </div>
               </div>
             ))}
