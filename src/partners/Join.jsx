@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
+import CryptoJS from 'crypto-js';
+import axios from 'axios';
+
+const secretKey = process.env.REACT_APP_SECRET_KEY;
+const MEMBER_URL ="https://arkad-server.onrender.com/users/member";
 
 const Join = () => {
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     firstName: '',
     middleName: '',
@@ -10,6 +18,8 @@ const Join = () => {
     gender: '',
     location: '',
     age: '',
+    nationality: "",
+    reasonForJoining: ""
   });
 
   const handleChange = (e) => {
@@ -20,9 +30,63 @@ const Join = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Join Form Data:', formData);
+    if(!secretKey) return;
+    setLoading(true);
+
+    const data ={
+      firstName: formData.firstName,
+      middleName: formData.middleName || null,
+      lastName: formData.lastName,
+      email: formData.email,
+      phoneNumber: formData.phoneNumber,
+      gender: formData.gender,
+      location: formData.location,
+      age: formData.age,
+      nationality: formData.nationality,
+      reasonForJoining: formData.reasonForJoining
+    }
+
+    try {
+      const dataStr = JSON.stringify(data);
+      const iv = CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
+      const encryptedData = CryptoJS.AES.encrypt(dataStr, CryptoJS.enc.Utf8.parse(secretKey), {
+        iv: CryptoJS.enc.Hex.parse(iv),
+        padding: CryptoJS.pad.Pkcs7,
+        mode: CryptoJS.mode.CBC,
+      }).toString();
+
+      const payload = { iv, ciphertext: encryptedData };
+
+      const response = await axios.post(MEMBER_URL, payload);
+
+      if(response.data.statusCode === 201){
+        setSuccess(response.data.message);
+        setTimeout(() => setSuccess(""), 5000);
+        setFormData({
+          firstName: '',
+          middleName: '',
+          lastName: '',
+          email: '',
+          phoneNumber: '',
+          gender: '',
+          location: '',
+          age: '',
+          nationality: "",
+          reasonForJoining: ""
+        });
+      }else{
+        setError(response.data.message);
+        setTimeout(() => setError(""), 5000);
+      }
+      
+    } catch (error) {
+      setError('Failed to send your message. Please try again. ', error);
+      setTimeout(() => setError(""), 5000);
+    }finally{
+      setLoading(false);
+    }
   };
 
   return (
@@ -107,8 +171,29 @@ const Join = () => {
           className="block w-full mb-2 p-2 border border-gray-300 rounded-md"
           required
         />
+        <input
+          type="text"
+          name="nationality"
+          value={formData.nationality}
+          onChange={handleChange}
+          placeholder="Nationality e.g. Kenyan"
+          className="block w-full mb-2 p-2 border border-gray-300 rounded-md"
+          required
+        />
+        <textarea
+          type="text"
+          name="reasonForJoining"
+          value={formData.reasonForJoining}
+          onChange={handleChange}
+          placeholder="Why you want to join us?"
+          className="block w-full mb-2 p-2 border border-gray-300 rounded-md"
+          rows="4"
+          required
+        />
+        {success && (<div className="text-green-600 mt-2 text-sm text-center">{success}</div>)}
+        {error && <div className="text-red-500 mt-2 text-sm text-center">{error}</div>}
         <button type="submit" className="bg-[#006D5B] text-black px-4 py-2 rounded-md transform transition-transform hover:scale-105">
-          Submit
+          {loading? "Submitting..." : "Submit"}
         </button>
       </form>
     </div>

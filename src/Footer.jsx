@@ -80,8 +80,6 @@ const Footer = () => {
 
       const payload = { iv, ciphertext: encryptedData };
 
-      console.log(payload);
-
       const response = await axios.post(MESSAGE_URL, payload);
 
       if(response.data.statusCode === 201){
