@@ -55,6 +55,15 @@ const Partner = () => {
       const response = await axios.post(PARTNER_URL, payload);
 
       if(response.data.success){
+        setFormData({
+          organizationName: '',
+          email: '',
+          website: '',
+          contact: '',
+          location: '',
+          organizationType: '',
+          partnershipDetails: '',
+        })
         setSuccess(response.data.message);
         setTimeout(() => setSuccess(""), 5000);
       }else{
@@ -63,6 +72,11 @@ const Partner = () => {
       }
       
     } catch (error) {
+      if (error.message === "Request failed with status code 409"){
+        setError("A similar request already exist for your organization");
+        setTimeout(() => setError(""),5000);
+        return;
+      }
       setError('Failed to send your message. Please try again. ', error);
       setTimeout(() => setError(""), 5000);
     }finally{
