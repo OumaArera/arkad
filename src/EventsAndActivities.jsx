@@ -104,7 +104,7 @@ const EventsAndActivities = () => {
               <img
                 src={event.image}
                 alt={event.description}
-                className="w-full h-40 object-cover rounded-lg mb-4 transform transition-transform hover:scale-105"
+                className="w-full h-40 object-contain rounded-lg mb-4 transform transition-transform hover:scale-105"
               />
               <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
               <p className="text-gray-600 mb-2">{event.venue}</p>
