@@ -4,6 +4,7 @@ import Modal from './Modal';
 import Volunteer from './Volunteer';
 import CryptoJS from 'crypto-js';
 import axios from 'axios';
+import "./Events.css"
 
 const secretKey = process.env.REACT_APP_SECRET_KEY;
 const ACTIVITIES_URL = "https://arkad-server.onrender.com/users/activities";
@@ -92,7 +93,10 @@ const EventsAndActivities = () => {
       <h2 className="text-4xl font-bold text-[#006D5B] mb-8 text-center">Upcoming Events and Activities</h2>
 
       {loading ? (
-        <p>Loading events...</p>
+        <div className="loading-bubble-wrapper">
+          <div className="loading-bubble"></div>
+          <p className="loading-text">Fetching events for you...</p>
+      </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {memoizedEvents.map((event) => (
