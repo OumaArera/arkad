@@ -12,7 +12,7 @@ const ACTIVITIES_URL = "https://arkad-server.onrender.com/users/activities";
 const EventsAndActivities = () => {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [actionType, setActionType] = useState(null);  // Holds action type like 'volunteer' or 'donate'
+  const [actionType, setActionType] = useState(null); 
   const [loading, setLoading] = useState(true);
 
   // Fetch events when the app loads
