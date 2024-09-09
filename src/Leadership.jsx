@@ -1,28 +1,58 @@
 import React, { useState, useEffect } from 'react';
-import image from './images/test1.jpg'; 
-import image1 from './images/test.jpg';
+import CryptoJS from 'crypto-js';  
+import "./Events.css";     
+
+const LEADERSHIP_URL = "https://arkad-server.onrender.com/users/leaders";
+const secretKey = process.env.REACT_APP_SECRET_KEY; 
 
 const Leadership = () => {
   const [leaders, setLeaders] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = window.innerWidth >= 768 ? 3 : 1; // Adjust number of items per page
+  const itemsPerPage = window.innerWidth >= 768 ? 3 : 1; 
   const totalPages = Math.ceil(leaders.length / itemsPerPage);
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchLeaders = async () => {
-      const data = [
-        { id: 1, image: image, name: "John Doe", role: "Founder and CEO" },
-        { id: 2, image: image, name: "Jane Doe", role: "Co-Founder and Strategic Partnerships Director" },
-        { id: 3, image: image, name: "Kanda Bondoman", role: "Co-Founder and Organizing Director" },
-        { id: 4, image: image, name: "John Doe", role: "Founder and CEO" },
-        { id: 5, image: image, name: "Jane Doe", role: "Co-Founder and Strategic Partnerships Director" },
-        { id: 6, image: image, name: "Kanda Bondoman", role: "Co-Founder and Organizing Director" },
-      ];
-      setLeaders(data);
-    };
-
     fetchLeaders();
   }, []);
+
+  const fetchLeaders = async () => {
+    if(!secretKey) return;
+    setLoading(true);
+
+    try {
+      const response = await fetch(LEADERSHIP_URL, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      const result = await response.json();
+
+      if(result.success){
+        const { iv, ciphertext } = result.data;
+        const decryptedData = CryptoJS.AES.decrypt(ciphertext, CryptoJS.enc.Utf8.parse(secretKey), {
+          iv: CryptoJS.enc.Hex.parse(iv),
+          padding: CryptoJS.pad.Pkcs7,
+          mode: CryptoJS.mode.CBC,
+        }).toString(CryptoJS.enc.Utf8);
+
+        const parsedData = JSON.parse(decryptedData);
+        setLeaders(parsedData)
+      }else{
+        setError(result.message);
+        setTimeout(() => setError(""), 5000);
+      }
+      
+    } catch (error) {
+      setError('Error fetching achievement data: ', error);  
+      setTimeout(() => setError(""), 5000);
+    } finally{
+      setLoading(false);
+    }
+    
+  };
 
   const currentLeaders = leaders.slice(
     currentPage * itemsPerPage,
@@ -32,6 +62,19 @@ const Leadership = () => {
   const goToPage = (pageIndex) => {
     setCurrentPage(pageIndex);
   };
+
+  if (loading) {
+    return (
+      <div className="loading-bubble-wrapper">
+        <div className="loading-bubble"></div>
+        <p className="loading-text">Getting our leaders...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <p className="text-red-500 text-center mt-4">{error}</p>;
+  }
 
   return (
     <div className="bg-white p-6">
@@ -51,12 +94,12 @@ const Leadership = () => {
                   <img
                     src={leader.image}
                     alt={leader.name}
-                    className="object-cover w-full h-full" 
+                    className="w-full h-full object-contain rounded-lg mb-4" 
                   />
                 </div>
                 <div className="p-4">
                   <h3 className="text-lg font-semibold text-[#006D5B]">{leader.name}</h3>
-                  <p className="text-md font-medium text-black break-words">{leader.role}</p> {/* Ensure long text wraps */}
+                  <p className="text-md font-medium text-black break-words">{leader.role}</p> 
                 </div>
               </div>
             ))}

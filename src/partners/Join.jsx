@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import CryptoJS from 'crypto-js';
-import axios from 'axios';
 
 const secretKey = process.env.REACT_APP_SECRET_KEY;
 const MEMBER_URL ="https://arkad-server.onrender.com/users/member";
@@ -59,10 +58,18 @@ const Join = () => {
 
       const payload = { iv, ciphertext: encryptedData };
 
-      const response = await axios.post(MEMBER_URL, payload);
+      const response = await fetch(MEMBER_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload)
+      });
 
-      if(response.data.statusCode === 201){
-        setSuccess(response.data.message);
+      const result = await response.json();
+
+      if(result.success){
+        setSuccess(result.message);
         setTimeout(() => setSuccess(""), 5000);
         setFormData({
           firstName: '',
@@ -77,7 +84,7 @@ const Join = () => {
           reasonForJoining: ""
         });
       }else{
-        setError(response.data.message);
+        setError(result.message);
         setTimeout(() => setError(""), 5000);
       }
       

@@ -1,40 +1,56 @@
-import React, { useState } from 'react';
-import tree from './images/tree_planting.jpg';
-import children from './images/happy_children.jpg';
-import mentorship from './images/mentorship.jpg';
+import React, { useState, useEffect } from 'react';
+import CryptoJS from 'crypto-js';  
+import "./Events.css";     
 
-const mediaData = [
-  {
-    id: 1,
-    image: children,
-    description: 'Children enjoying a retreat organized by Arkad SMP.',
-  },
-  {
-    id: 2,
-    image: tree,
-    description: 'Tree planting event at Karura Forest.',
-  },
-  {
-    id: 3,
-    image: mentorship,
-    description: 'Youth mentorship session in Naivasha, Kenya.',
-  },
-  {
-    id: 4,
-    image: tree,
-    description: 'Another tree planting event.',
-  },
-  {
-    id: 5,
-    image: children,
-    description: 'More children enjoying the retreat.',
-  },
-];
+const MEDIA_URL = "https://arkad-server.onrender.com/users/media";
+const secretKey = process.env.REACT_APP_SECRET_KEY; 
 
 const Media = () => {
+  const [mediaData, setMediaData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = window.innerWidth >= 768 ? 3 : 1; // 3 items per page on larger screens, 1 item on smaller screens
+  const itemsPerPage = window.innerWidth >= 768 ? 3 : 1; 
   const totalPages = Math.ceil(mediaData.length / itemsPerPage);
+  const [loading, setLoading] = useState(true); 
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    getMedia();
+  }, []);
+
+  const getMedia = async () => {
+    if (!secretKey) return;
+    setLoading(true);
+
+    try {
+      const response = await fetch(MEDIA_URL, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      const result = await response.json();
+      if (result.success) {
+        const { iv, ciphertext } = result.data;
+        const decryptedData = CryptoJS.AES.decrypt(ciphertext, CryptoJS.enc.Utf8.parse(secretKey), {
+          iv: CryptoJS.enc.Hex.parse(iv),
+          padding: CryptoJS.pad.Pkcs7,
+          mode: CryptoJS.mode.CBC,
+        }).toString(CryptoJS.enc.Utf8);
+
+        const parsedData = JSON.parse(decryptedData);
+        setMediaData(parsedData);
+      } else {
+        setError(result.message);
+        setTimeout(() => setError(""), 5000);
+      }
+      
+    } catch (error) {
+      setError('Error fetching media data: ', error);  
+      setTimeout(() => setError(""), 5000);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const currentItems = mediaData.slice(
     currentPage * itemsPerPage,
@@ -44,6 +60,19 @@ const Media = () => {
   const goToPage = (pageIndex) => {
     setCurrentPage(pageIndex);
   };
+
+  if (loading) {
+    return (
+      <div className="loading-bubble-wrapper">
+        <div className="loading-bubble"></div>
+        <p className="loading-text">Getting media data...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <p className="text-red-500 text-center mt-4">{error}</p>;
+  }
 
   return (
     <div className="p-6">
@@ -56,16 +85,20 @@ const Media = () => {
             className="bg-white shadow-lg rounded-lg overflow-hidden"
           >
             <div className="relative">
-              <img
-                src={item.image}
-                alt={item.description}
-                className="w-full h-60 object-cover transform transition-transform hover:scale-105"
-              />
+              {/* Map over each media item to display multiple images */}
+              {item.media.map((imageUrl, index) => (
+                <img
+                  key={index}
+                  src={imageUrl}
+                  alt={`Media ${index + 1}`}
+                  className="w-40 h-60 object-cover transform transition-transform hover:scale-105 mb-2"
+                />
+              ))}
+              {/* Card description at the bottom */}
               <div
-                className="absolute bottom-0 bg-white text-[#006D5B] px-4 py-2 rounded-t-lg"
+                className="bg-white text-[#006D5B] px-4 py-2 rounded-t-lg"
                 style={{
-                  width: '80%', 
-                  left: '10%', 
+                  width: '100%',
                 }}
               >
                 <p className="text-center text-sm">{item.description}</p>
@@ -74,6 +107,7 @@ const Media = () => {
           </div>
         ))}
       </div>
+      {/* Pagination controls */}
       <div className="flex justify-center mt-6">
         {Array.from({ length: totalPages }).map((_, pageIndex) => (
           <button

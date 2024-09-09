@@ -1,20 +1,60 @@
-// AboutUs.js
-import React, { useState } from 'react';
-import achievementsData from './achievementData'; 
+import React, { useState, useEffect } from 'react';
+import CryptoJS from 'crypto-js';
+import "./Events.css";
+
+const ACHIEVEMENTS_URL = "https://arkad-server.onrender.com/users/achievement";
+const secretKey = process.env.REACT_APP_SECRET_KEY;
 
 const AboutUs = () => {
+  const [achievements, setAchievements] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = window.innerWidth >= 768 ? 2 : 1;
-  const totalPages = Math.ceil(achievementsData.length / itemsPerPage);
+  const totalPages = Math.ceil(achievements.length / itemsPerPage);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const goToPage = (pageIndex) => {
     setCurrentPage(pageIndex);
   };
 
-  const currentItems = achievementsData.slice(
+  const currentItems = achievements.slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
   );
+
+  useEffect(() => {
+    fetchAchievements();
+  }, []);
+
+  const fetchAchievements = async () => {
+    if(!secretKey) return;
+    setLoading(true);
+    try {
+      const response = await fetch(ACHIEVEMENTS_URL);
+      const result = await response.json();
+
+      if(result.success){
+          const { iv, ciphertext } = result.data;
+          const decryptedData = CryptoJS.AES.decrypt(ciphertext, CryptoJS.enc.Utf8.parse(secretKey), {
+              iv: CryptoJS.enc.Hex.parse(iv),
+              padding: CryptoJS.pad.Pkcs7,
+              mode: CryptoJS.mode.CBC,
+          }).toString(CryptoJS.enc.Utf8);
+
+          const parsedEvents = JSON.parse(decryptedData);
+          Object.entries(parsedEvents).forEach(([key, value]) => console.log(`${key} : ${JSON.stringify(value)}`));
+          setAchievements(parsedEvents);
+      }else{
+          setError(result.message);
+          setTimeout(() => setError(""), 5000);
+      }
+    } catch (err) {
+        setError(err.message);
+        setTimeout(() => setError(""), 5000);
+    } finally {
+        setLoading(false);
+    }
+  };
 
   const handleShare = async (id) => {
     const url = `${window.location.origin}/achievement/${id}`;
@@ -39,8 +79,9 @@ const AboutUs = () => {
 
   return (
     <section className="bg-white py-12 px-6">
+      {/* About Us content */}
       <div className="container mx-auto text-center">
-        <h2 className="text-4xl font-bold text-[#006D5B] mb-8">About Us</h2>
+      <h2 className="text-4xl font-bold text-[#006D5B] mb-8">About Us</h2>
         <h3 className="text-3xl font-bold text-green-900 mb-6">Our Core Values</h3>
           <div className="flex flex-wrap justify-center mb-12">
             {[
@@ -58,7 +99,6 @@ const AboutUs = () => {
               </div>
             ))}
           </div>
-
           <div className="mb-8">
             <h3 className="text-2xl font-semibold mb-4 text-green-900">Motto</h3>
             <p className="text-xl text-gray-800 font-light">Inclusive, sustainable development for a prosperous Africa</p>
@@ -78,52 +118,56 @@ const AboutUs = () => {
             <h3 className="text-2xl font-semibold mb-4 text-green-900">Tagline</h3>
             <p className="text-xl text-gray-900 font-light">Kataa ufukara</p>
           </div>
-        <div className="text-lg leading-relaxed mb-10">
-          <div className="relative">
           <h2 className="text-4xl font-bold text-green-900 mb-6">Our Success Stories</h2>
-            <div className="flex justify-center items-center flex-wrap">
-              {currentItems.map((achievement) => (
-                <div
-                  key={achievement.id}
-                  className="w-full md:w-1/3 p-4 bg-white text-black rounded-lg shadow-lg mx-4 my-4"
-                  style={{ minHeight: "400px" }}
-                >
-                  <div className="flex flex-col items-center justify-center mb-4 space-y-4">
-                    {achievement.activitiesImages.map((img, idx) => (
-                      <img
-                        key={idx}
-                        src={img}
-                        alt="Activity"
-                        className="rounded-lg transition-transform duration-300 ease-in-out transform hover:scale-125"
-                        style={{ width: "200px", height: "200px", objectFit: "cover" }}
-                      />
-                    ))}
-                  </div>
-                  <p className="text-lg mb-2 font-semibold" style={{ fontSize: "1.125rem", color: "#333" }}>{achievement.description}</p>
-                  <p className="mb-2 text-sm font-medium" style={{ color: "#2D3748" }}><strong>Venue:</strong> {achievement.venue}</p>
-                  <p className="mb-2 text-sm font-light" style={{ color: "#4A5568" }}><strong>Date:</strong> {achievement.date}</p>
-                  <button
-                    onClick={() => handleShare(achievement.id)}
-                    className="mt-4 text-white bg-green-700 hover:bg-[#006D5B] px-4 py-2 rounded-lg transition-colors"
-                  >
-                    Share or Copy Link
-                  </button>
-                </div>
-              ))}
-            </div>
-            <div className="flex justify-center mt-6">
-              {Array.from({ length: totalPages }).map((_, pageIndex) => (
-                <button
-                  key={pageIndex}
-                  onClick={() => goToPage(pageIndex)}
-                  className={`mx-2 px-4 py-2 rounded-full ${currentPage === pageIndex ? 'bg-[#FFD700] text-white' : 'bg-gray-300 text-gray-700'} transition-colors`}
-                >
-                  {pageIndex + 1}
-                </button>
-              ))}
-            </div>
+          {error && <div className="text-red-500 mt-2 text-sm text-center">{error}</div>}
+        {loading? (
+          <div className="loading-bubble-wrapper">
+            <div className="loading-bubble"></div>
+            <p className="loading-text">Getting our success stories...</p>
           </div>
+          
+        ):(
+          <div className="text-lg leading-relaxed mb-10">
+        
+        <div className="flex justify-center items-center flex-wrap">
+          {currentItems.map((achievement) => (
+            <div key={achievement.id} className="w-full md:w-1/3 p-4 bg-white text-black rounded-lg shadow-lg mx-4 my-4" style={{ minHeight: "400px" }}>
+              <div className="flex flex-col items-center justify-center mb-4">
+                <img
+                  src={achievement.image}
+                  alt="Activity"
+                  className="rounded-lg transition-transform duration-300 ease-in-out transform hover:scale-125"
+                  style={{ width: "200px", height: "200px", objectFit: "cover" }}
+                />
+              </div>
+              <p className="text-lg mb-2 font-semibold" style={{ fontSize: "1.125rem", color: "#333" }}>{achievement.description}</p>
+              <p className="mb-2 text-sm font-medium" style={{ color: "#2D3748" }}><strong>Venue:</strong> {achievement.venue}</p>
+              <p className="mb-2 text-sm font-light" style={{ color: "#4A5568" }}><strong>Date:</strong> {new Date(achievement.date).toLocaleDateString()}</p>
+              {/* Share button */}
+              <button
+                onClick={() => handleShare(achievement.id)}
+                className="mt-4 text-white bg-green-700 hover:bg-[#006D5B] px-4 py-2 rounded-lg transition-colors"
+              >
+                Share or Copy Link
+              </button>
+            </div>
+          ))}
         </div>
+
+        <div className="flex justify-center mt-6">
+          {Array.from({ length: totalPages }).map((_, pageIndex) => (
+            <button
+              key={pageIndex}
+              onClick={() => goToPage(pageIndex)}
+              className={`mx-2 px-4 py-2 rounded-full ${currentPage === pageIndex ? 'bg-[#FFD700] text-white' : 'bg-gray-300 text-gray-700'} transition-colors`}
+            >
+              {pageIndex + 1}
+            </button>
+          ))}
+        </div>
+      </div>
+        )}
+      
       </div>
     </section>
   );
