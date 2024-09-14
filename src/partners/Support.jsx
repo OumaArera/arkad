@@ -124,7 +124,7 @@ const Support = () => {
         <p className="text-2xl  font-bold text-[#006D5B]">
           Account Number: <span className="text-black font-bold">7853823</span>
         </p>
-        <p className="text-2xl font-bold text-[#006D5B]">
+        <p className="text-1xl font-bold text-[#006D5B]">
           Account Name: <span className="text-black font-bold">Arkad Social Mentorship</span>
         </p>
       </div>
