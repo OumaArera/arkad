@@ -111,7 +111,13 @@ const Support = () => {
 
         <div className="flex items-center mb-4">
           <p className="text-lg font-semibold text-[#006D5B]">
-            Mpesa: <span className="text-black">+254 791 693 221</span>
+            Business Number: <span className="text-black">522533</span>
+          </p>
+          <p className="text-lg font-semibold text-[#006D5B]">
+            Account Number: <span className="text-black">7853823</span>
+          </p>
+          <p className="text-lg font-semibold text-[#006D5B]">
+            Account Name: <span className="text-black">Arkad Social Mentorship</span>
           </p>
         </div>
 
