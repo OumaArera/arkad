@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaWhatsapp, FaPhone, FaTwitter, FaFacebook, FaInstagram, FaTiktok, FaLinkedin, FaYoutube } from 'react-icons/fa';
+import { FaWhatsapp, FaPhone,  FaFacebook, FaInstagram, FaTiktok, FaLinkedin } from 'react-icons/fa';
 import logo from './images/AfyaLink.png';
 import axios from 'axios';
 import logo2 from "./images/old.png";
@@ -213,21 +213,32 @@ const Footer = () => {
             <a href="https://linkedin.com/company/arkadsmp" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaLinkedin className="text-2xl" />
             </a>
+            <a href="https://x.com/ArkadSMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-6 h-6 text-2xl"
+              >
+                <path d="M18 6L6 18"></path>
+                <path d="M6 6l12 12"></path>
+              </svg>
+            </a>
+
             <a href="https://facebook.com/arkadsic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaFacebook className="text-2xl" />
-            </a>
-            <a href="https://instagram.com/arkad_sic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
-              <FaInstagram className="text-2xl" />
             </a>
             <a href="https://tiktok.com/@Arkad_SMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaTiktok className="text-2xl" />
             </a>
-            <a href="https://x.com/ArkadSMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
-              <FaTwitter className="text-2xl" />
+            <a href="https://instagram.com/arkad_sic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
+              <FaInstagram className="text-2xl" />
             </a>
-            <a href="https://youtube.com/@arkadfamilysic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
-              <FaYoutube className="text-2xl" />
-            </a>
+            
           </div>
         </div>
 
@@ -343,7 +354,7 @@ const Footer = () => {
       <div className="mt-6">
         <div className="w-full h-1 hover:bg-[#FFD700] bg-white mb-4"></div>
         <div className="flex justify-center items-center">
-          <p className="text-sm">&copy; {getCurrentYear()} Arkad Social Mentorship Program. All Rights Reserved.</p>
+          <p className="text-sm">&copy; {getCurrentYear()} Arkad Social Mentorship CBO. All Rights Reserved.</p>
         </div>
       </div>
 

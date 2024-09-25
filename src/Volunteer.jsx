@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import axios from 'axios';
 import CryptoJS from 'crypto-js';
 
 const secretKey = process.env.REACT_APP_SECRET_KEY;
@@ -10,7 +9,6 @@ const Volunteer = ({ activityId }) => {
     fullName: '',
     phoneNumber: '',
     email: '',
-    location: '',
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -21,17 +19,34 @@ const Volunteer = ({ activityId }) => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const validatePhoneNumber = (phoneNumber) => {
+    const regex = /^(07|01)\d{8}$/; // Regex to check if phone number starts with 07 or 01 and is 10 digits long
+    return regex.test(phoneNumber);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!secretKey || !activityId) return;
+
+    const { fullName, phoneNumber, email } = formData;
+
+    // Validate the phone number
+    if (!validatePhoneNumber(phoneNumber)) {
+      setError("Phone number must start with 07 or 01 and be 10 digits long.");
+      setTimeout(() => setError(""), 5000);
+      return;
+    }
+
+    // Format phone number
+    const formattedPhoneNumber = phoneNumber.replace(/^0/, '254'); // Replace leading zero with 254
+
     setLoading(true);
 
     const data = {
-      fullName: formData.fullName,
-      phoneNumber: formData.phoneNumber,
-      email: formData.email,
-      location: formData.location,
-      activityId: activityId
+      fullName,
+      phoneNumber: formattedPhoneNumber,
+      email,
+      activityId
     };
 
     try {
@@ -46,7 +61,7 @@ const Volunteer = ({ activityId }) => {
       const payload = { iv, ciphertext: encryptedData };
       const response = await fetch(VOLUNTEER_URL, {
         method: "POST",
-        headers:{
+        headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify(payload)
@@ -59,7 +74,6 @@ const Volunteer = ({ activityId }) => {
           fullName: '',
           phoneNumber: '',
           email: '',
-          location: '',
         });
         setMessage(result.message);
         setTimeout(() => setMessage(""), 5000);
@@ -79,6 +93,11 @@ const Volunteer = ({ activityId }) => {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col p-4">
       <h2 className="text-xl font-bold mb-4">Volunteer Information</h2>
+      
+      {/* Full Name Input */}
+      <label className="mb-2">
+        Full Name <span className="text-red-500">*</span>
+      </label>
       <input
         type="text"
         name="fullName"
@@ -88,6 +107,11 @@ const Volunteer = ({ activityId }) => {
         className="p-2 mb-4 border border-gray-300 rounded"
         required
       />
+
+      {/* Phone Number Input */}
+      <label className="mb-2">
+        Phone Number <span className="text-red-500">*</span>
+      </label>
       <input
         type="tel"
         name="phoneNumber"
@@ -97,6 +121,11 @@ const Volunteer = ({ activityId }) => {
         className="p-2 mb-4 border border-gray-300 rounded"
         required
       />
+
+      {/* Email Input */}
+      <label className="mb-2">
+        Email
+      </label>
       <input
         type="email"
         name="email"
@@ -105,16 +134,12 @@ const Volunteer = ({ activityId }) => {
         placeholder="Email"
         className="p-2 mb-4 border border-gray-300 rounded"
       />
-      <input
-        type="text"
-        name="location"
-        value={formData.location}
-        onChange={handleChange}
-        placeholder="Location"
-        className="p-2 mb-4 border border-gray-300 rounded"
-      />
+      
+      {/* Messages */}
       {message && <div className="text-green-600 mt-2 text-sm text-center">{message}</div>}
       {error && <div className="text-red-500 mt-2 text-sm text-center">{error}</div>}
+      
+      {/* Submit Button */}
       <button
         type="submit"
         className="bg-[#006D5B] text-white px-4 py-2 rounded-md"

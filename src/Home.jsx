@@ -4,7 +4,7 @@ import Join from './partners/Join';
 import Partner from './partners/Partner';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom'; 
-import africa from './images/africa.jpg';
+import background from './images/bg.jpg';
 import Modal from './Modal'; 
 import donate from "./images/donate.png";
 import join from './images/join.png';
@@ -33,10 +33,10 @@ const Home = () => {
 
   return (
     <div
-      className="relative p-6 min-h-screen bg-cover bg-center text-black overflow-hidden"
-      style={{ backgroundImage: `url(${africa})` }} 
+      className="relative min-h-screen bg-cover bg-center bg-fixed text-black overflow-hidden"
+      style={{ backgroundImage: `url(${background})`, backgroundSize: 'cover', backgroundAttachment: 'fixed' }} 
     >
-      {/* Overlay */}
+      {/* Background overlay for opacity effect */}
       <div className="absolute inset-0 bg-black opacity-50"></div>
 
       <div className="relative z-10 text-center">

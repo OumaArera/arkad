@@ -1,4 +1,3 @@
-// Modal.js
 import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
@@ -27,7 +26,7 @@ const Modal = ({ children, isOpen, onClose }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <motion.div
         ref={modalRef}
-        className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full relative"
+        className="bg-white p-4 rounded-lg shadow-lg max-w-lg w-full relative"
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.8, opacity: 0 }}
@@ -39,7 +38,11 @@ const Modal = ({ children, isOpen, onClose }) => {
         >
           &#x2715; {/* X close icon */}
         </button>
-        {children}
+        
+        {/* Add a scrollable container */}
+        <div className="max-h-[70vh] overflow-y-auto">
+          {children}
+        </div>
       </motion.div>
     </div>
   );

@@ -15,22 +15,70 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full bg-[#006D5B] text-white z-50 shadow-lg">
+    <header 
+    className="fixed top-0 left-0 w-full bg-[#006D5B] text-white z-50 shadow-lg">
       <div className="container mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
+          {/* Logo Section */}
           <div className="flex items-center">
-            <Link to="/" onClick={closeMenu}> {/* Close menu when logo is clicked */}
+            <Link to="/" onClick={closeMenu}>
               <img src={logo} alt="Ark Family Logo" className="h-16" />
             </Link>
-            <div className="hidden md:flex flex-col items-center ml-4">
-              <p className="text-base md:text-lg text-center">
-                Empowering Africa's socio-economic growth through mentorship, collaboration, and sustainable innovation
-              </p>
-              <p className="text-xs md:text-lg italic mt-2 text-center">
-                Kataa ufukara
-              </p>
-            </div>
           </div>
+
+          {/* Navbar for larger screens */}
+          <div className="hidden md:flex flex-grow justify-end items-center">
+            {/* Menu items spaced from the logo with a margin */}
+            <nav className="flex items-center space-x-8 ml-20">
+              <Link
+                to="/"
+                onClick={closeMenu}
+                className={`text-lg ${
+                  location.pathname === '/' ? 'text-yellow-500 font-semibold' : 'text-white hover:text-yellow-500'
+                }`}
+              >
+                Home
+              </Link>
+              <Link
+                to="/events-activities"
+                onClick={closeMenu}
+                className={`text-lg ${
+                  location.pathname === '/events-activities' ? 'text-yellow-500 font-semibold' : 'text-white hover:text-yellow-500'
+                }`}
+              >
+                Events & Activities
+              </Link>
+              <Link
+                to="/gallery"
+                onClick={closeMenu}
+                className={`text-lg ${
+                  location.pathname === '/gallery' ? 'text-yellow-500 font-semibold' : 'text-white hover:text-yellow-500'
+                }`}
+              >
+                Gallery
+              </Link>
+              <Link
+                to="/about-us"
+                onClick={closeMenu}
+                className={`text-lg ${
+                  location.pathname === '/about-us' ? 'text-yellow-500 font-semibold' : 'text-white hover:text-yellow-500'
+                }`}
+              >
+                About Us
+              </Link>
+              <Link
+                to="/contact-us"
+                onClick={closeMenu}
+                className={`text-lg ${
+                  location.pathname === '/contact-us' ? 'text-yellow-500 font-semibold' : 'text-white hover:text-yellow-500'
+                }`}
+              >
+                Contact Us
+              </Link>
+            </nav>
+          </div>
+
+          {/* Mobile Menu Button */}
           <button
             className="md:hidden text-white focus:outline-none"
             onClick={toggleMenu}
@@ -51,75 +99,58 @@ const Header = () => {
             </svg>
           </button>
         </div>
-
-        <div className="md:hidden mt-2">
-          <p className="text-xs mt-2">
-            Empowering Africa's socio-economic growth through mentorship, collaboration, and sustainable innovation
-          </p>
-          <p className="text-xs flex-col text-center italic mt-2">
-            Kataa ufukara
-          </p>
-        </div>
       </div>
 
+      {/* Mobile menu items */}
       <nav
         className={`${
           isOpen ? 'block' : 'hidden'
-        } md:flex md:justify-between bg-[#FFD700] text-black px-4 py-2 transform md:transform-none transition-transform duration-300`}
+        } md:hidden bg-[#006D5B] text-white px-4 py-2 transition-transform duration-300`}
       >
         <Link
           to="/"
           onClick={closeMenu}
-          className={`block py-2 md:py-0 md:inline-block md:ml-48 ${
-            location.pathname === '/' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
+          className={`block py-2 ${
+            location.pathname === '/' ? 'text-yellow-500 font-semibold' : 'text-white hover:text-yellow-500'
           }`}
         >
           Home
         </Link>
         <Link
-          to="/about-us"
-          onClick={closeMenu}
-          className={`block py-2 md:py-0 md:inline-block ${
-            location.pathname === '/about-us' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
-          }`}
-        >
-          About Us
-        </Link>
-        <Link
-          to="/leadership"
-          onClick={closeMenu}
-          className={`block py-2 md:py-0 md:inline-block ${
-            location.pathname === '/leadership' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
-          }`}
-        >
-          Our Leadership
-        </Link>
-        <Link
-          to="/departments"
-          onClick={closeMenu}
-          className={`block py-2 md:py-0 md:inline-block ${
-            location.pathname === '/departments' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
-          }`}
-        >
-          Departments
-        </Link>
-        <Link
           to="/events-activities"
           onClick={closeMenu}
-          className={`block py-2 md:py-0 md:inline-block ${
-            location.pathname === '/events-activities' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
+          className={`block py-2 ${
+            location.pathname === '/events-activities' ? 'text-yellow-500 font-semibold' : 'text-white hover:text-yellow-500'
           }`}
         >
           Events & Activities
         </Link>
         <Link
-          to="/media"
+          to="/gallery"
           onClick={closeMenu}
-          className={`block py-2 md:py-0 md:inline-block md:mr-32 ${
-            location.pathname === '/media' ? 'text-[#006D5B] font-semibold' : 'text-black hover:text-[#006D5B]'
+          className={`block py-2 ${
+            location.pathname === '/gallery' ? 'text-yellow-500 font-semibold' : 'text-white hover:text-yellow-500'
           }`}
         >
-          Media
+          Gallery
+        </Link>
+        <Link
+          to="/about-us"
+          onClick={closeMenu}
+          className={`block py-2 ${
+            location.pathname === '/about-us' ? 'text-yellow-500 font-semibold' : 'text-white hover:text-yellow-500'
+          }`}
+        >
+          About Us
+        </Link>
+        <Link
+          to="/contact-us"
+          onClick={closeMenu}
+          className={`block py-2 ${
+            location.pathname === '/contact-us' ? 'text-yellow-500 font-semibold' : 'text-white hover:text-yellow-500'
+          }`}
+        >
+          Contact Us
         </Link>
       </nav>
     </header>

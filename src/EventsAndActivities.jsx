@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import Support from './partners/Support';
 import Modal from './Modal';
 import Volunteer from './Volunteer';
 import CryptoJS from 'crypto-js';
 import axios from 'axios';
-import "./Events.css"
+import "./Events.css";
+import RecentEvents from './RecentEvents';
 
 const secretKey = process.env.REACT_APP_SECRET_KEY;
 const ACTIVITIES_URL = "https://arkad-server.onrender.com/users/activities";
@@ -12,10 +13,13 @@ const ACTIVITIES_URL = "https://arkad-server.onrender.com/users/activities";
 const EventsAndActivities = () => {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [actionType, setActionType] = useState(null); 
+  const [actionType, setActionType] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(0);
+  const itemsPerPage = window.innerWidth >= 768 ? 2 : 1; // Adjust based on screen size
 
-  // Fetch events when the app loads
   useEffect(() => {
     const fetchEvents = async () => {
       if (!secretKey) return;
@@ -56,13 +60,13 @@ const EventsAndActivities = () => {
   };
 
   const handleParticipate = (event, actionType) => {
-    setSelectedEvent(event); // Set selected event when user clicks participate
-    setActionType(actionType); // Set the action type (volunteer or donate)
+    setSelectedEvent(event);
+    setActionType(actionType);
   };
 
   const renderActionComponent = () => {
     if (actionType === 'volunteer' && selectedEvent) {
-      return <Volunteer activityId={selectedEvent.id} />;  // Pass selected event's id to Volunteer component
+      return <Volunteer activityId={selectedEvent.id} />;
     } else if (actionType === 'donate') {
       return <Support />;
     }
@@ -73,7 +77,7 @@ const EventsAndActivities = () => {
     const { description, venue, date } = event;
     const startDate = new Date(date);
     const endDate = new Date(startDate);
-    endDate.setHours(startDate.getHours() + 2); 
+    endDate.setHours(startDate.getHours() + 2);
 
     const googleCalendarUrl = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
       description
@@ -86,7 +90,30 @@ const EventsAndActivities = () => {
     window.open(googleCalendarUrl, '_blank');
   };
 
-  const memoizedEvents = useMemo(() => events, [events]);
+  const handleShare = (event) => {
+    const currentRootUrl = window.location.origin;
+    const eventUrl = `${currentRootUrl}/events/${event.id}`; // Assuming there's an individual event page
+    const shareMessage = `Check out this upcoming event: ${event.title}.\nLearn more at: ${eventUrl}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: event.title,
+        text: shareMessage,
+        url: eventUrl,
+      })
+      .catch((error) => console.error('Error sharing:', error));
+    } else {
+      // Fallback for older browsers
+      navigator.clipboard.writeText(shareMessage)
+        .then(() => alert('Share message copied to clipboard!'))
+        .catch((error) => console.error('Error copying text:', error));
+    }
+  };
+  
+
+  // Pagination logic
+  const totalPages = Math.ceil(events.length / itemsPerPage);
+  const displayedEvents = events.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
   return (
     <div className="p-6">
@@ -96,10 +123,10 @@ const EventsAndActivities = () => {
         <div className="loading-bubble-wrapper">
           <div className="loading-bubble"></div>
           <p className="loading-text">Fetching events for you...</p>
-      </div>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {memoizedEvents.map((event) => (
+          {displayedEvents.map((event) => (
             <div key={event.id} className="bg-white shadow-lg rounded-lg p-4">
               <img
                 src={event.image}
@@ -108,6 +135,7 @@ const EventsAndActivities = () => {
               />
               <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
               <p className="text-gray-600 mb-2">{event.venue}</p>
+              <p className="text-gray-600 mb-2">{event.description}</p>
               <p className="text-gray-600 mb-4">{formatEventDate(event.date)}</p>
               <button
                 onClick={() => handleParticipate(event, 'volunteer')}
@@ -127,15 +155,37 @@ const EventsAndActivities = () => {
               >
                 Set Reminder
               </button>
+              <button
+                onClick={() => handleShare(event)}
+                className="bg-[#006D5B] text-white px-4 py-2 rounded-md transform transition-transform hover:scale-105"
+              >
+                Share this event
+              </button>
             </div>
           ))}
         </div>
       )}
 
+      {/* Pagination Controls */}
+      <div className="flex justify-center mt-4 space-x-2"> {/* Add space-x-2 for better spacing */}
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            className={`px-4 py-2 mx-1 rounded-md ${index === currentPage ? 'bg-[#006D5B] text-white' : 'bg-gray-200 text-gray-700'}`}
+            onClick={() => setCurrentPage(index)}
+          >
+            {index + 1}
+          </button>
+        ))}
+      </div>
+
       {/* Modal for Participation */}
       <Modal isOpen={!!actionType && !!selectedEvent} onClose={() => { setSelectedEvent(null); setActionType(null); }}>
         {renderActionComponent()}
       </Modal>
+      
+      {/* Render RecentEvents component */}
+      <RecentEvents /> {/* This will render the recent events below the main events */}
     </div>
   );
 };
