@@ -85,7 +85,6 @@ const Media = () => {
             className="bg-white shadow-lg rounded-lg overflow-hidden"
           >
             <div className="relative">
-              {/* Map over each media item to display multiple images */}
               {item.media.map((imageUrl, index) => (
                 <img
                   key={index}
@@ -94,7 +93,6 @@ const Media = () => {
                   className="w-40 h-60 object-cover transform transition-transform hover:scale-105 mb-2"
                 />
               ))}
-              {/* Card description at the bottom */}
               <div
                 className="bg-white text-[#006D5B] px-4 py-2 rounded-t-lg"
                 style={{

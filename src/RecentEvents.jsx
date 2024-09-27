@@ -8,7 +8,7 @@ const RecentEvents = () => {
   const [recentEvents, setRecentEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = window.innerWidth >= 768 ? 2 : 1; // Adjust based on screen size
+  const itemsPerPage = window.innerWidth >= 768 ? 2 : 1; 
 
   useEffect(() => {
     const fetchRecentEvents = async () => {

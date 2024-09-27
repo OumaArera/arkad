@@ -8,17 +8,15 @@ import "./Events.css";
 import RecentEvents from './RecentEvents';
 
 const secretKey = process.env.REACT_APP_SECRET_KEY;
-const ACTIVITIES_URL = "https://arkad-server.onrender.com/users/activities";
+const ACTIVITIES_URL = "https://arkad-server.onrender.com/users/achievement";
 
 const EventsAndActivities = () => {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [actionType, setActionType] = useState(null);
   const [loading, setLoading] = useState(true);
-  
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = window.innerWidth >= 768 ? 2 : 1; // Adjust based on screen size
+  const itemsPerPage = window.innerWidth >= 768 ? 2 : 1;
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -92,7 +90,7 @@ const EventsAndActivities = () => {
 
   const handleShare = (event) => {
     const currentRootUrl = window.location.origin;
-    const eventUrl = `${currentRootUrl}/events/${event.id}`; // Assuming there's an individual event page
+    const eventUrl = `${currentRootUrl}/events/${event.id}`;
     const shareMessage = `Check out this upcoming event: ${event.title}.\nLearn more at: ${eventUrl}`;
     
     if (navigator.share) {
@@ -103,7 +101,6 @@ const EventsAndActivities = () => {
       })
       .catch((error) => console.error('Error sharing:', error));
     } else {
-      // Fallback for older browsers
       navigator.clipboard.writeText(shareMessage)
         .then(() => alert('Share message copied to clipboard!'))
         .catch((error) => console.error('Error copying text:', error));
@@ -111,7 +108,6 @@ const EventsAndActivities = () => {
   };
   
 
-  // Pagination logic
   const totalPages = Math.ceil(events.length / itemsPerPage);
   const displayedEvents = events.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
