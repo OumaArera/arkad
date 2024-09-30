@@ -66,6 +66,7 @@ const Header = () => {
               >
                 About Us
               </Link>
+              </nav>
           </div>
 
           {/* Mobile Menu Button */}
@@ -133,15 +134,8 @@ const Header = () => {
         >
           About Us
         </Link>
-        <Link
-          to="/contact-us"
-          onClick={closeMenu}
-          className={`block py-2 ${
-            location.pathname === '/contact-us' ? 'text-yellow-500 font-semibold' : 'text-white hover:text-yellow-500'
-          }`}
-        >
-          Contact Us
-        </Link>
+        
+        
       </nav>
     </header>
   );
