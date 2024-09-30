@@ -186,8 +186,7 @@ const Footer = () => {
           <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
           <Link to="/events-activities" className="text-[#FFD700]">Events & Activities</Link>
           <Link to="/media" className="text-[#FFD700]">Media Gallery</Link>
-          <Link to="/departments" className="text-[#FFD700]">Our Departments</Link>
-          <Link to="/about-us" className="text-[#FFD700]">About Arkad Family</Link>
+          <Link to="/about-us" className="text-[#FFD700]">About Arkad CBO</Link>
         </div>
 
         {/* Contact Us Section */}
