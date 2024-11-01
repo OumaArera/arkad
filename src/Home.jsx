@@ -67,7 +67,6 @@ const Home = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          Hi Grace, How are you?
           Leading Africa towards socio-economic independence through mentorship, collaboration, and sustainable innovation.
         </motion.h1>
 
