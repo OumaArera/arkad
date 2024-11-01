@@ -145,6 +145,7 @@ const Home = () => {
 
         {/* Partners Section */}
         <div className="mt-12 flex flex-col items-center space-y-4">
+          Our Partners
           <div className="flex items-center space-x-4">
             {/* Left Arrow */}
             <button
