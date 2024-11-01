@@ -39,7 +39,7 @@ const Achievements = () => {
     return (
       <div className="loading-bubble-wrapper">
         <div className="loading-bubble"></div>
-        <p className="loading-text">Retrieving your achievements...</p>
+        <p className="loading-text">Retrieving our recent events...</p>
       </div>
     );
   }
