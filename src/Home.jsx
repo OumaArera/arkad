@@ -80,9 +80,67 @@ const Home = () => {
           Learn More
         </motion.button>
 
+        {/* Donation, Join, and Partner Buttons */}
         <div className="mt-12 p-6 rounded-lg shadow-xl space-y-8 md:space-y-0 md:flex md:space-x-8 justify-center items-start">
-          {/* Donation, Join, and Partner Buttons */}
-          { /* ... (same button code as before) */ }
+          <div className="flex flex-col items-center text-center">
+            <motion.div
+              className="w-20 h-20 bg-[#006D5B] rounded-full flex items-center justify-center"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <img src={donate} alt="Donate Icon" className="w-12 h-12 rounded-full" />
+            </motion.div>
+            <p className="mt-4 font-bold text-white text-lg">Make a donation to our programs</p>
+            <motion.button
+              onClick={() => handleFormType('support')}
+              className="mt-4 bg-[#006D5B] text-white px-6 py-3 rounded-lg shadow-lg transform transition-transform hover:scale-105"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Support Us
+            </motion.button>
+          </div>
+          
+          <div className="flex flex-col items-center text-center">
+            <motion.div
+              className="w-20 h-20 bg-[#006D5B] rounded-full flex items-center justify-center"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <img src={join} alt="Join Icon" className="w-12 h-12 rounded-full" />
+            </motion.div>
+            <p className="mt-4 font-bold text-white text-lg">Join our cause today</p>
+            <motion.button
+              onClick={() => handleFormType('join')}
+              className="mt-4 bg-[#006D5B] text-white px-6 py-3 rounded-lg shadow-lg transform transition-transform hover:scale-105"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Join Us
+            </motion.button>
+          </div>
+
+          <div className="flex flex-col items-center text-center">
+            <motion.div
+              className="w-20 h-20 bg-[#006D5B] rounded-full flex items-center justify-center"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <img src={partner} alt="Partner Icon" className="w-12 h-12 rounded-full" />
+            </motion.div>
+            <p className="mt-4 font-bold text-white text-lg">Become a partner with us</p>
+            <motion.button
+              onClick={() => handleFormType('partner')}
+              className="mt-4 bg-[#006D5B] text-white px-6 py-3 rounded-lg shadow-lg transform transition-transform hover:scale-105"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Partner with Us
+            </motion.button>
+          </div>
         </div>
 
         {/* Partners Section */}
