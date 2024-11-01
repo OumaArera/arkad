@@ -22,7 +22,6 @@ const Footer = () => {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
-
   const formRef = useRef(null);
 
   useEffect(() => {
@@ -47,11 +46,12 @@ const Footer = () => {
     e.preventDefault();
     if (!secretKey) return;
     setIsSubmitting(true);
+
     const dataToEncrypt = {
       fullName: formData.fullName,
       email: formData.email,
       phoneNumber: formData.phoneNumber,
-      message: formData.message
+      message: formData.message,
     };
 
     try {
@@ -64,26 +64,27 @@ const Footer = () => {
       }).toString();
 
       const payload = { iv, ciphertext: encryptedData };
-
       const response = await fetch(MESSAGE_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
       const result = await response.json();
-
-      if (result.statusCode === 201) {
-        setFormData({ fullName: '', email: '', phoneNumber: '', message: '' });
+      if (response.ok) {
+        setFormData({
+          fullName: '',
+          email: '',
+          phoneNumber: '',
+          message: '',
+        });
         setSuccess(result.message);
         setTimeout(() => setSuccess(""), 5000);
       } else {
         setError(result.message);
         setTimeout(() => setError(""), 5000);
       }
-      
+
     } catch (error) {
       setError('Failed to send your message. Please try again.');
       setTimeout(() => setError(""), 5000);
@@ -94,10 +95,7 @@ const Footer = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleNewsletterChange = (e) => {
@@ -110,7 +108,6 @@ const Footer = () => {
     setIsSubmitting(true);
 
     const data = { email: newsletterEmail };
-
     try {
       const dataStr = JSON.stringify(data);
       const iv = CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
@@ -121,27 +118,22 @@ const Footer = () => {
       }).toString();
 
       const payload = { iv, ciphertext: encryptedData };
-
       const response = await fetch(SUBSCRIPTION_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
 
       const result = await response.json();
-
-      if (result.success) {
+      if (response.ok) {
         setNewsletterEmail("");
-        setTimeout(() => setSuccess(""), 5000);
         alert(result.message);
       } else {
         setError(result.message);
-        setTimeout(() => setError(""), 5000);
         alert(result.message);
       }
-      
+      setTimeout(() => setError(""), 5000);
+
     } catch (error) {
       alert(`There was an error: ${error}`);
     } finally {
@@ -159,9 +151,9 @@ const Footer = () => {
 
   return (
     <footer className="relative bg-[#006D5B] text-white p-6">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 text-center md:text-left">
-        
-        {/* Events & Activities Navigation Link */}
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-center md:text-left">
+
+        {/* Quick Links Section */}
         <div className="flex flex-col items-center">
           <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
           <Link to="/events-activities" className="text-[#FFD700]">Events & Activities</Link>
@@ -186,22 +178,20 @@ const Footer = () => {
               <FaPhone className="mr-2 text-[#FFD700]" />+254 791 693 221
             </a>
           </div>
-
-          {/* Social Media Icons */}
           <div className="flex justify-center md:justify-start space-x-4 mt-4">
-            <a href="https://linkedin.com/company/arkadsmp" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
+            <a href="https://linkedin.com/company/arkadsmp" target="_blank" rel="noopener noreferrer" className="text-[#FFD700]">
               <FaLinkedin className="text-2xl" />
             </a>
-            <a href="https://x.com/ArkadSMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
-              <FaXTwitter className='text-2xl' />
+            <a href="https://x.com/ArkadSMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700]">
+              <FaXTwitter className="text-2xl" />
             </a>
-            <a href="https://facebook.com/arkadsic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
+            <a href="https://facebook.com/arkadsic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700]">
               <FaFacebook className="text-2xl" />
             </a>
-            <a href="https://tiktok.com/@Arkad_SMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
+            <a href="https://tiktok.com/@Arkad_SMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700]">
               <FaTiktok className="text-2xl" />
             </a>
-            <a href="https://instagram.com/arkad_sic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
+            <a href="https://instagram.com/arkad_sic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700]">
               <FaInstagram className="text-2xl" />
             </a>
           </div>
@@ -210,7 +200,7 @@ const Footer = () => {
         {/* Newsletter Subscription Section */}
         <div className="mt-6 md:mt-0 md:col-span-3 lg:col-span-1">
           <h3 className="text-lg font-semibold mb-2 text-center md:text-left">Subscribe to our Newsletter</h3>
-          <form onSubmit={handleNewsletterSubmit} className="flex flex-col md:flex-row items-center md:items-start justify-center md:justify-start">
+          <form onSubmit={handleNewsletterSubmit} className="flex flex-col md:flex-row items-center">
             <input
               type="email"
               name="newsletterEmail"
@@ -222,7 +212,7 @@ const Footer = () => {
             <button
               type="submit"
               className="bg-[#FFD700] text-black px-4 py-2 transform transition-transform hover:scale-105 rounded-md"
-              disabled={isSubmitting}
+              disabled={!newsletterEmail || isSubmitting}
             >
               Subscribe
             </button>
@@ -230,13 +220,9 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Footer Bottom */}
-      <div className="mt-8 text-center border-t border-[#FFD700] pt-6">
-        <div className="flex items-center justify-center mb-2">
-          <img src={logo} alt="Arkad Logo" className="h-6" />
-          <img src={logo2} alt="Old Logo" className="h-6 ml-2" />
-        </div>
-        <p className="text-sm">&copy; {getCurrentYear()} Arkad. All rights reserved.</p>
+      {/* Copyright */}
+      <div className="mt-8 text-center">
+        <p>&copy; {getCurrentYear()} Arkad CBO. All rights reserved.</p>
       </div>
     </footer>
   );
