@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-const secretKey = process.env.REACT_APP_SECRET_KEY;
 const PARTNER_URL = "https://arkad-server.onrender.com/users/partner";
 
 const Partner = () => {
@@ -32,7 +31,6 @@ const Partner = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!secretKey) return;
     setLoading(true);
 
     // Validate Partnership Details
