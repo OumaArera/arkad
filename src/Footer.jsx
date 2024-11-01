@@ -1,24 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaWhatsapp, FaPhone,  FaFacebook, FaInstagram, FaTiktok, FaLinkedin } from 'react-icons/fa';
 import { FaXTwitter } from "react-icons/fa6";
-import logo from './images/AfyaLink.png';
-import axios from 'axios';
-import logo2 from "./images/old.png";
-import CryptoJS from 'crypto-js';
 import { Link } from 'react-router-dom';
 
-const secretKey = process.env.REACT_APP_SECRET_KEY;
 const MESSAGE_URL ="https://arkad-server.onrender.com/users/message";
 const SUBSCRIPTION_URL = "https://arkad-server.onrender.com/users/subscribe"
 
 const Footer = () => {
-  const partners = [
-    { img: logo, url: logo },
-    { img: logo2, url: logo2 },
-    { img: logo, url: logo },
-  ];
 
-  const [currentPartner, setCurrentPartner] = useState(0);
   const [showContactForm, setShowContactForm] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
@@ -32,14 +21,6 @@ const Footer = () => {
   const [error, setError] = useState("");
 
   const formRef = useRef(null);
-
-  useEffect(() => {
-    const partnerInterval = setInterval(() => {
-      setCurrentPartner((prev) => (prev + 1) % partners.length);
-    }, 20000);
-
-    return () => clearInterval(partnerInterval);
-  }, [partners.length]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -61,7 +42,6 @@ const Footer = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(!secretKey) return;
     setIsSubmitting(true);
     const dataToEncrypt={
       fullName: formData.fullName,
@@ -71,29 +51,27 @@ const Footer = () => {
     };
 
     try {
-      const dataStr = JSON.stringify(dataToEncrypt);
-      const iv = CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
-      const encryptedData = CryptoJS.AES.encrypt(dataStr, CryptoJS.enc.Utf8.parse(secretKey), {
-        iv: CryptoJS.enc.Hex.parse(iv),
-        padding: CryptoJS.pad.Pkcs7,
-        mode: CryptoJS.mode.CBC,
-      }).toString();
 
-      const payload = { iv, ciphertext: encryptedData };
+      const response = await fetch(MESSAGE_URL,{
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataToEncrypt)
+      });
+      const result = await response.json();
 
-      const response = await axios.post(MESSAGE_URL, payload);
-
-      if(response.data.statusCode === 201){
+      if(result.statusCode === 201){
         setFormData({
           fullName: '',
           email: '',
           phoneNumber: '',
           message: '',
         });
-        setSuccess(response.data.message);
+        setSuccess(result.message);
         setTimeout(() => setSuccess(""), 5000);
       }else{
-        setError(response.data.message);
+        setError(result.message);
         setTimeout(() => setError(""), 5000);
       }
       
@@ -119,7 +97,6 @@ const Footer = () => {
 
   const handleNewsletterSubmit = async(e) => {
     e.preventDefault();
-    if(!secretKey) return;
     setIsSubmitting(true);
 
     const data = {
@@ -127,26 +104,24 @@ const Footer = () => {
     }
 
     try {
-      const dataStr = JSON.stringify(data);
-      const iv = CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
-      const encryptedData = CryptoJS.AES.encrypt(dataStr, CryptoJS.enc.Utf8.parse(secretKey), {
-        iv: CryptoJS.enc.Hex.parse(iv),
-        padding: CryptoJS.pad.Pkcs7,
-        mode: CryptoJS.mode.CBC,
-      }).toString();
+      const response = await fetch(SUBSCRIPTION_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
 
-      const payload = { iv, ciphertext: encryptedData };
+      const result = await response.json();
 
-      const response = await axios.post(SUBSCRIPTION_URL, payload);
-
-      if (response.data.success){
+      if (result.success){
         setNewsletterEmail("");
         setTimeout(() => setSuccess(""), 5000);
-        alert(response.data.message);
+        alert(result.message);
       }else{
-        setError(response.data.message);
+        setError(result.message);
         setTimeout(() => setError(""), 5000);
-        alert(response.data.message);
+        alert(result.message);
       }
       
     } catch (error) {
@@ -167,21 +142,6 @@ const Footer = () => {
   return (
     <footer className="relative bg-[#006D5B] text-white p-6">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 text-center md:text-left">
-        
-        {/* Partners Section */}
-        <div className="flex flex-col items-center">
-          <h3 className="text-lg font-semibold mb-4">Our Partners</h3>
-          <div className="flex flex-wrap justify-center gap-4">
-            <a href={partners[currentPartner].url} target="_blank" rel="noopener noreferrer">
-              <img
-                src={partners[currentPartner].img}
-                alt="Partner logo"
-                className="w-32 h-32 object-contain rounded-lg shadow-md transform transition-transform hover:scale-110"
-              />
-            </a>
-          </div>
-        </div>
-
         {/* Events & Activities Navigation Link */}
         <div className="flex flex-col items-center">
           <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
