@@ -9,6 +9,10 @@ import Modal from './Modal';
 import donate from "./images/donate.png";
 import join from './images/join.png';
 import partner from './images/partner.png';
+import partner1 from './images/AfyaLink.png';
+import partner2 from './images/old.png';
+
+const partners = [partner1, partner2, partner1, partner1, partner2, partner1]
 
 const Home = () => {
   const [formType, setFormType] = useState(null);
@@ -37,7 +41,8 @@ const Home = () => {
       style={{ backgroundImage: `url(${background})`, backgroundSize: 'cover', backgroundAttachment: 'fixed' }} 
     >
       {/* Background overlay for opacity effect */}
-      <div className="absolute inset-0 bg-black opacity-50"></div>
+      <div className="absolute inset-0 bg-black opacity-50">Hi Grace, How are you?</div>
+
 
       <div className="relative z-10 text-center">
         <motion.h1
