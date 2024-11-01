@@ -17,13 +17,13 @@ const EventsAndActivities = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-
       try {
         const response = await fetch(ACTIVITIES_URL);
         const result = await response.json();
-
-        if (result.success) {
+        if (result.success && result.data.length > 0) {
           setEvents(result.data);
+        } else {
+          setEvents([]);
         }
       } catch (error) {
         console.error("Error fetching events:", error);
@@ -31,19 +31,17 @@ const EventsAndActivities = () => {
         setLoading(false);
       }
     };
-
     fetchEvents();
   }, []);
 
   const formatEventDate = (dateString) => {
     const date = new Date(dateString);
-    const formattedDate = new Intl.DateTimeFormat('en-US', {
+    return new Intl.DateTimeFormat('en-US', {
       weekday: 'long',
       month: 'long',
       day: 'numeric',
       year: 'numeric',
     }).format(date);
-    return formattedDate;
   };
 
   const handleParticipate = (event, actionType) => {
@@ -95,54 +93,58 @@ const EventsAndActivities = () => {
         .catch((error) => console.error('Error copying text:', error));
     }
   };
-  
 
   const totalPages = Math.ceil(events.length / itemsPerPage);
   const displayedEvents = events.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
   return (
     <div className="p-6">
-      <h2 className="text-4xl font-bold text-[#006D5B] mb-8 text-center">Upcoming Events </h2>
+      <h2 className="text-4xl font-bold text-[#006D5B] mb-8 text-center">Upcoming Events</h2>
 
       {loading ? (
         <div className="loading-bubble-wrapper">
           <div className="loading-bubble"></div>
           <p className="loading-text">Fetching events for you...</p>
         </div>
+      ) : events.length === 0 ? (
+        <div className="text-center text-gray-500 mt-8">
+          <p className="text-xl font-semibold">No events currently available</p>
+          <p>Stay tuned for upcoming activities and events!</p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayedEvents.map((event) => (
-            <div key={event.id} className="bg-white shadow-lg rounded-lg p-4">
+            <div key={event.id} className="bg-white shadow-lg rounded-lg p-4 transition-transform transform hover:scale-105 hover:shadow-xl">
               <img
                 src={event.image}
                 alt={event.description}
-                className="w-full h-40 object-contain rounded-lg mb-4 transform transition-transform hover:scale-105"
+                className="w-full h-40 object-cover rounded-lg mb-4"
               />
               <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
-              <p className="text-gray-600 mb-2">{event.venue}</p>
+              <p className="text-gray-600 mb-2"><strong>Location:</strong> {event.venue}</p>
               <p className="text-gray-600 mb-2">{event.description}</p>
-              <p className="text-gray-600 mb-4">{formatEventDate(event.date)}</p>
+              <p className="text-gray-500 mb-4"><strong>Date:</strong> {formatEventDate(event.date)}</p>
               <button
                 onClick={() => handleParticipate(event, 'volunteer')}
-                className="bg-[#006D5B] text-white px-4 py-2 rounded-md mb-2 mr-2 transform transition-transform hover:scale-105"
+                className="bg-[#006D5B] text-white px-4 py-2 rounded-md mb-2 mr-2 transition-transform transform hover:scale-105"
               >
                 Volunteer
               </button>
               <button
                 onClick={() => handleParticipate(event, 'donate')}
-                className="bg-[#006D5B] text-white px-4 py-2 rounded-md mb-2 mr-2 transform transition-transform hover:scale-105"
+                className="bg-[#006D5B] text-white px-4 py-2 rounded-md mb-2 mr-2 transition-transform transform hover:scale-105"
               >
                 Donate
               </button>
               <button
                 onClick={() => handleSetReminder(event)}
-                className="bg-[#FFD700] text-black px-4 py-2 rounded-md transform transition-transform hover:scale-105"
+                className="bg-[#FFD700] text-black px-4 py-2 rounded-md mb-2 mr-2 transition-transform transform hover:scale-105"
               >
                 Set Reminder
               </button>
               <button
                 onClick={() => handleShare(event)}
-                className="bg-[#006D5B] text-white px-4 py-2 rounded-md transform transition-transform hover:scale-105"
+                className="bg-[#006D5B] text-white px-4 py-2 rounded-md transition-transform transform hover:scale-105"
               >
                 Share this event
               </button>
@@ -152,7 +154,7 @@ const EventsAndActivities = () => {
       )}
 
       {/* Pagination Controls */}
-      <div className="flex justify-center mt-4 space-x-2"> {/* Add space-x-2 for better spacing */}
+      <div className="flex justify-center mt-4">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index}
@@ -168,9 +170,9 @@ const EventsAndActivities = () => {
       <Modal isOpen={!!actionType && !!selectedEvent} onClose={() => { setSelectedEvent(null); setActionType(null); }}>
         {renderActionComponent()}
       </Modal>
-      
+
       {/* Render RecentEvents component */}
-      <RecentEvents /> {/* This will render the recent events below the main events */}
+      <RecentEvents />
     </div>
   );
 };
