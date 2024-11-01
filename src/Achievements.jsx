@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import CryptoJS from 'crypto-js';  
 import "./Events.css";     
 
 const ACHIEVEMENTS_URL = "https://arkad-server.onrender.com/users/achievement";
-const secretKey = process.env.REACT_APP_SECRET_KEY; 
 
 const Achievements = () => {
   const { id } = useParams(); 
@@ -25,15 +23,7 @@ const Achievements = () => {
       const result = await response.json();
 
       if (result.success) {
-        const { iv, ciphertext } = result.data;
-        const decryptedData = CryptoJS.AES.decrypt(ciphertext, CryptoJS.enc.Utf8.parse(secretKey), {
-          iv: CryptoJS.enc.Hex.parse(iv),
-          padding: CryptoJS.pad.Pkcs7,
-          mode: CryptoJS.mode.CBC,
-        }).toString(CryptoJS.enc.Utf8);
-
-        const parsedAchievement = JSON.parse(decryptedData);
-        setAchievement(parsedAchievement);  
+        setAchievement(result.data);  
       } else {
         setError(result.message); 
         setTimeout(() => setError(""), 5000); 
@@ -63,7 +53,7 @@ const Achievements = () => {
   return (
     <section className="bg-white py-12 px-6">
       <div className="container mx-auto text-center">
-        <h2 className="text-4xl font-bold text-green-900 mb-6">Our Success Story</h2>
+        <h2 className="text-4xl font-bold text-green-900 mb-6">Recent Activities</h2>
         {achievement ? (
           <div className="w-full md:w-1/2 p-4 bg-white text-black rounded-lg shadow-lg mx-4 my-4" style={{ minHeight: "400px" }}>
             <div className="flex flex-col items-center justify-center mb-4">

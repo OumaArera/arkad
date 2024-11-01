@@ -2,13 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Support from './partners/Support';
 import Modal from './Modal';
 import Volunteer from './Volunteer';
-import CryptoJS from 'crypto-js';
-import axios from 'axios';
 import "./Events.css";
 import RecentEvents from './RecentEvents';
 
-const secretKey = process.env.REACT_APP_SECRET_KEY;
-const ACTIVITIES_URL = "https://arkad-server.onrender.com/users/achievement";
+const ACTIVITIES_URL = "https://arkad-server.onrender.com/users/activities";
 
 const EventsAndActivities = () => {
   const [events, setEvents] = useState([]);
@@ -20,21 +17,13 @@ const EventsAndActivities = () => {
 
   useEffect(() => {
     const fetchEvents = async () => {
-      if (!secretKey) return;
 
       try {
-        const response = await axios.get(ACTIVITIES_URL);
+        const response = await fetch(ACTIVITIES_URL);
+        const result = await response.json();
 
-        if (response.data.success) {
-          const { iv, ciphertext } = response.data.data;
-          const decryptedData = CryptoJS.AES.decrypt(ciphertext, CryptoJS.enc.Utf8.parse(secretKey), {
-            iv: CryptoJS.enc.Hex.parse(iv),
-            padding: CryptoJS.pad.Pkcs7,
-            mode: CryptoJS.mode.CBC,
-          }).toString(CryptoJS.enc.Utf8);
-
-          const parsedEvents = JSON.parse(decryptedData);
-          setEvents(parsedEvents);
+        if (result.success) {
+          setEvents(result.data);
         }
       } catch (error) {
         console.error("Error fetching events:", error);
@@ -113,7 +102,7 @@ const EventsAndActivities = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-4xl font-bold text-[#006D5B] mb-8 text-center">Upcoming Events and Activities</h2>
+      <h2 className="text-4xl font-bold text-[#006D5B] mb-8 text-center">Upcoming Events </h2>
 
       {loading ? (
         <div className="loading-bubble-wrapper">
