@@ -1,24 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaWhatsapp, FaPhone,  FaFacebook, FaInstagram, FaTiktok, FaLinkedin } from 'react-icons/fa';
+import { FaWhatsapp, FaPhone, FaFacebook, FaInstagram, FaTiktok, FaLinkedin } from 'react-icons/fa';
 import { FaXTwitter } from "react-icons/fa6";
 import logo from './images/AfyaLink.png';
-import axios from 'axios';
 import logo2 from "./images/old.png";
 import CryptoJS from 'crypto-js';
 import { Link } from 'react-router-dom';
 
 const secretKey = process.env.REACT_APP_SECRET_KEY;
-const MESSAGE_URL ="https://arkad-server.onrender.com/users/message";
-const SUBSCRIPTION_URL = "https://arkad-server.onrender.com/users/subscribe"
+const MESSAGE_URL = "https://arkad-server.onrender.com/users/message";
+const SUBSCRIPTION_URL = "https://arkad-server.onrender.com/users/subscribe";
 
 const Footer = () => {
-  const partners = [
-    { img: logo, url: logo },
-    { img: logo2, url: logo2 },
-    { img: logo, url: logo },
-  ];
-
-  const [currentPartner, setCurrentPartner] = useState(0);
   const [showContactForm, setShowContactForm] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
@@ -32,14 +24,6 @@ const Footer = () => {
   const [error, setError] = useState("");
 
   const formRef = useRef(null);
-
-  useEffect(() => {
-    const partnerInterval = setInterval(() => {
-      setCurrentPartner((prev) => (prev + 1) % partners.length);
-    }, 20000);
-
-    return () => clearInterval(partnerInterval);
-  }, [partners.length]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -61,9 +45,9 @@ const Footer = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(!secretKey) return;
+    if (!secretKey) return;
     setIsSubmitting(true);
-    const dataToEncrypt={
+    const dataToEncrypt = {
       fullName: formData.fullName,
       email: formData.email,
       phoneNumber: formData.phoneNumber,
@@ -81,24 +65,27 @@ const Footer = () => {
 
       const payload = { iv, ciphertext: encryptedData };
 
-      const response = await axios.post(MESSAGE_URL, payload);
+      const response = await fetch(MESSAGE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
 
-      if(response.data.statusCode === 201){
-        setFormData({
-          fullName: '',
-          email: '',
-          phoneNumber: '',
-          message: '',
-        });
-        setSuccess(response.data.message);
+      const result = await response.json();
+
+      if (result.statusCode === 201) {
+        setFormData({ fullName: '', email: '', phoneNumber: '', message: '' });
+        setSuccess(result.message);
         setTimeout(() => setSuccess(""), 5000);
-      }else{
-        setError(response.data.message);
+      } else {
+        setError(result.message);
         setTimeout(() => setError(""), 5000);
       }
       
     } catch (error) {
-      setError('Failed to send your message. Please try again. ', error);
+      setError('Failed to send your message. Please try again.');
       setTimeout(() => setError(""), 5000);
     } finally {
       setIsSubmitting(false);
@@ -117,14 +104,12 @@ const Footer = () => {
     setNewsletterEmail(e.target.value);
   };
 
-  const handleNewsletterSubmit = async(e) => {
+  const handleNewsletterSubmit = async (e) => {
     e.preventDefault();
-    if(!secretKey) return;
+    if (!secretKey) return;
     setIsSubmitting(true);
 
-    const data = {
-      email: newsletterEmail
-    }
+    const data = { email: newsletterEmail };
 
     try {
       const dataStr = JSON.stringify(data);
@@ -137,21 +122,29 @@ const Footer = () => {
 
       const payload = { iv, ciphertext: encryptedData };
 
-      const response = await axios.post(SUBSCRIPTION_URL, payload);
+      const response = await fetch(SUBSCRIPTION_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
 
-      if (response.data.success){
+      const result = await response.json();
+
+      if (result.success) {
         setNewsletterEmail("");
         setTimeout(() => setSuccess(""), 5000);
-        alert(response.data.message);
-      }else{
-        setError(response.data.message);
+        alert(result.message);
+      } else {
+        setError(result.message);
         setTimeout(() => setError(""), 5000);
-        alert(response.data.message);
+        alert(result.message);
       }
       
     } catch (error) {
       alert(`There was an error: ${error}`);
-    }finally{
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -168,20 +161,6 @@ const Footer = () => {
     <footer className="relative bg-[#006D5B] text-white p-6">
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 text-center md:text-left">
         
-        {/* Partners Section */}
-        <div className="flex flex-col items-center">
-          <h3 className="text-lg font-semibold mb-4">Our Partners</h3>
-          <div className="flex flex-wrap justify-center gap-4">
-            <a href={partners[currentPartner].url} target="_blank" rel="noopener noreferrer">
-              <img
-                src={partners[currentPartner].img}
-                alt="Partner logo"
-                className="w-32 h-32 object-contain rounded-lg shadow-md transform transition-transform hover:scale-110"
-              />
-            </a>
-          </div>
-        </div>
-
         {/* Events & Activities Navigation Link */}
         <div className="flex flex-col items-center">
           <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
@@ -216,7 +195,6 @@ const Footer = () => {
             <a href="https://x.com/ArkadSMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaXTwitter className='text-2xl' />
             </a>
-
             <a href="https://facebook.com/arkadsic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaFacebook className="text-2xl" />
             </a>
@@ -226,7 +204,6 @@ const Footer = () => {
             <a href="https://instagram.com/arkad_sic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
               <FaInstagram className="text-2xl" />
             </a>
-            
           </div>
         </div>
 
@@ -240,112 +217,27 @@ const Footer = () => {
               value={newsletterEmail}
               onChange={handleNewsletterChange}
               placeholder="Enter your email"
-              className="p-2 mb-2 md:mb-0 md:mr-2 w-full md:w-auto border border-gray-300 rounded bg-white text-black"
-              required
+              className="px-4 py-2 rounded-md text-black mb-2 md:mb-0 md:mr-2"
             />
             <button
               type="submit"
               className="bg-[#FFD700] text-black px-4 py-2 transform transition-transform hover:scale-105 rounded-md"
+              disabled={isSubmitting}
             >
-              {isSubmitting? "Sending.." : "Subscribe"}
+              Subscribe
             </button>
-            <br />
           </form>
         </div>
-
       </div>
 
-      {/* Contact Form Modal */}
-      {showContactForm && (
-        <div className="fixed inset-0 flex justify-center items-center z-50">
-          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
-          <div ref={formRef} className="relative bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-            <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="fullName" className="block font-medium text-gray-700">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-white text-black placeholder-gray-500"
-                  placeholder="Enter your full name"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block font-medium text-gray-700">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-white text-black placeholder-gray-500"
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="phoneNumber" className="block font-medium text-gray-700">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  name="phoneNumber"
-                  value={formData.phoneNumber}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-white text-black placeholder-gray-500"
-                  placeholder="Enter your phone number"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="message" className="block font-medium text-gray-700">
-                  Message
-                </label>
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 bg-white text-black placeholder-gray-500"
-                  placeholder="Enter your message"
-                  rows="4"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                className={`w-full py-2 px-4 rounded-md text-white ${validateForm() ? 'bg-[#006D5B] hover:bg-opacity-90' : 'bg-gray-500 cursor-not-allowed'}` }
-                disabled={!validateForm() || isSubmitting}
-              >
-                {isSubmitting ? 'Sending...' : 'Submit'}
-              </button>
-              {success && (<div className="text-green-600 mt-2 text-sm text-center">{success}</div>)}
-              {error && <div className="text-red-500 mt-2 text-sm text-center">{error}</div>}
-              
-            </form>
-            <button
-              onClick={() => setShowContactForm(false)}
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-            >
-              &times;
-            </button>
-          </div>
+      {/* Footer Bottom */}
+      <div className="mt-8 text-center border-t border-[#FFD700] pt-6">
+        <div className="flex items-center justify-center mb-2">
+          <img src={logo} alt="Arkad Logo" className="h-6" />
+          <img src={logo2} alt="Old Logo" className="h-6 ml-2" />
         </div>
-      )}
-
-      <div className="mt-6">
-        <div className="w-full h-1 hover:bg-[#FFD700] bg-white mb-4"></div>
-        <div className="flex justify-center items-center">
-          <p className="text-sm">&copy; {getCurrentYear()} Arkad Social Mentorship CBO. All Rights Reserved.</p>
-        </div>
+        <p className="text-sm">&copy; {getCurrentYear()} Arkad. All rights reserved.</p>
       </div>
-
     </footer>
   );
 };
