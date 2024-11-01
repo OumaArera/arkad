@@ -47,7 +47,6 @@ const Join = () => {
       email: formData.email,
       phoneNumber: modifiedPhoneNumber,
     };
-    Object.entries(data).forEach(([key, value]) => console.log(`${key} : ${value}`))
 
     try {
       

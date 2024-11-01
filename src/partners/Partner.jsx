@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import CryptoJS from 'crypto-js';
 
 const secretKey = process.env.REACT_APP_SECRET_KEY;
 const PARTNER_URL = "https://arkad-server.onrender.com/users/partner";
@@ -55,18 +53,17 @@ const Partner = () => {
     };
 
     try {
-      const dataStr = JSON.stringify(data);
-      const iv = CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
-      const encryptedData = CryptoJS.AES.encrypt(dataStr, CryptoJS.enc.Utf8.parse(secretKey), {
-        iv: CryptoJS.enc.Hex.parse(iv),
-        padding: CryptoJS.pad.Pkcs7,
-        mode: CryptoJS.mode.CBC,
-      }).toString();
+      const response = await fetch(PARTNER_URL, {
+        method: "POST",
+        headers:{
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
 
-      const payload = { iv, ciphertext: encryptedData };
-      const response = await axios.post(PARTNER_URL, payload);
+      const result = await response.json();
 
-      if (response.data.success) {
+      if (result.success) {
         setFormData({
           organizationName: '',
           email: '',
@@ -75,10 +72,10 @@ const Partner = () => {
           location: '',
           partnershipDetails: '',
         });
-        setSuccess(response.data.message);
+        setSuccess(result.message);
         setTimeout(() => setSuccess(""), 5000);
       } else {
-        setError(response.data.message);
+        setError(result.message);
         setTimeout(() => setError(""), 5000);
       }
 
