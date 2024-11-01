@@ -7,14 +7,14 @@ const RecentEvents = () => {
   const [recentEvents, setRecentEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = window.innerWidth >= 768 ? 2 : 1; 
+  const itemsPerPage = window.innerWidth >= 768 ? 2 : 1;
 
   useEffect(() => {
     const fetchRecentEvents = async () => {
       try {
         const response = await fetch(RECENT_EVENTS_URL);
         const result = await response.json();
-        if (result.success && resultdata.length > 0) {
+        if (result.success && result.data.length > 0) {
           setRecentEvents(result.data);
         } else {
           setRecentEvents([]);
@@ -27,6 +27,16 @@ const RecentEvents = () => {
     };
     fetchRecentEvents();
   }, []);
+
+  const formatEventDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
 
   const totalPages = Math.ceil(recentEvents.length / itemsPerPage);
   const displayedEvents = recentEvents.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
@@ -48,21 +58,28 @@ const RecentEvents = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayedEvents.map((event) => (
-            <div key={event.id} className="bg-white shadow-lg rounded-lg p-4 transition-transform transform hover:scale-105 hover:shadow-2xl">
+            <div 
+              key={event.id} 
+              className="bg-gradient-to-br from-white to-gray-50 shadow-xl rounded-lg p-6 transition-transform transform hover:scale-105 hover:shadow-2xl">
+              
               <img
                 src={event.image}
                 alt={event.title}
                 className="w-full h-40 object-cover rounded-lg mb-4 transition-transform hover:scale-105"
               />
-              <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
-              <p className="text-gray-600 mb-4">{event.description}</p>
+              
+              <h3 className="text-2xl font-semibold text-[#006D5B] mb-2">{event.title}</h3>
+              <p className="text-sm text-gray-600 italic mb-2">Hosted by: {event.organizer || 'Unknown Organizer'}</p>
+              <p className="text-gray-500 mb-4">{formatEventDate(event.date)}</p>
+              <p className="text-gray-700 mb-4">{event.description}</p>
+              <p className="text-sm text-gray-600 mb-4"><strong>Location:</strong> {event.location || 'Online'}</p>
             </div>
           ))}
         </div>
       )}
 
       {/* Pagination Controls */}
-      <div className="flex justify-center mt-4">
+      <div className="flex justify-center mt-8 space-x-2">
         {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index}
