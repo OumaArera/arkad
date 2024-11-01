@@ -3,7 +3,7 @@ import Support from './partners/Support';
 import Modal from './Modal';
 import Volunteer from './Volunteer';
 import "./Events.css";
-import RecentEvents from './RecentEvents';
+import Achievements from './Achievements';
 
 const ACTIVITIES_URL = "https://arkad-server.onrender.com/users/activities";
 
@@ -172,7 +172,7 @@ const EventsAndActivities = () => {
       </Modal>
 
       {/* Render RecentEvents component */}
-      <RecentEvents />
+      <Achievements />
     </div>
   );
 };
