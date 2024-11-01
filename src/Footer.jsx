@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaWhatsapp, FaPhone,  FaFacebook, FaInstagram, FaTiktok, FaLinkedin } from 'react-icons/fa';
+import { FaXTwitter } from "react-icons/fa6";
 import logo from './images/AfyaLink.png';
 import axios from 'axios';
 import logo2 from "./images/old.png";
@@ -213,19 +214,7 @@ const Footer = () => {
               <FaLinkedin className="text-2xl" />
             </a>
             <a href="https://x.com/ArkadSMP" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="w-6 h-6 text-2xl"
-              >
-                <path d="M18 6L6 18"></path>
-                <path d="M6 6l12 12"></path>
-              </svg>
+              <FaXTwitter className='text-2xl' />
             </a>
 
             <a href="https://facebook.com/arkadsic" target="_blank" rel="noopener noreferrer" className="text-[#FFD700] transform transition-transform hover:scale-125">
