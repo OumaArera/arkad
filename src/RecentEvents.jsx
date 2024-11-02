@@ -73,7 +73,7 @@ const RecentEvents = () => {
                 <h3 className="text-2xl font-semibold text-[#006D5B] mb-2">{event.title}</h3>
                 <p className="text-gray-500 mb-2">{formatEventDate(event.date)}</p>
                 <p className="text-gray-700 mb-4">{event.description}</p>
-                <p className="text-sm text-gray-600"><strong>Location:</strong> {event.location || 'Online'}</p>
+                <p className="text-sm text-gray-600"><strong>Location:</strong> {event.venue || 'Online'}</p>
               </div>
             </div>
           ))}
