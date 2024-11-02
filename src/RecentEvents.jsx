@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './Events.css';
 
 const RECENT_EVENTS_URL = "https://arkad-server.onrender.com/users/achievement";
 
@@ -46,9 +45,9 @@ const RecentEvents = () => {
       <h2 className="text-4xl font-bold text-[#006D5B] mb-8 text-center">Recent Activities</h2>
 
       {loading ? (
-        <div className="loading-bubble-wrapper">
-          <div className="loading-bubble"></div>
-          <p className="loading-text">Fetching recent events for you...</p>
+        <div className="flex justify-center items-center mt-8">
+          <div className="animate-spin h-8 w-8 border-4 border-green-500 border-t-transparent rounded-full"></div>
+          <p className="ml-4 text-lg text-gray-600">Fetching recent events for you...</p>
         </div>
       ) : recentEvents.length === 0 ? (
         <div className="text-center text-gray-500 mt-8">
@@ -60,18 +59,22 @@ const RecentEvents = () => {
           {displayedEvents.map((event) => (
             <div 
               key={event.id} 
-              className="bg-gradient-to-br from-white to-gray-50 shadow-xl rounded-lg p-6 transition-transform transform hover:scale-105 hover:shadow-2xl">
+              className="flex flex-col bg-gradient-to-br from-white to-gray-50 shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-transform transform hover:scale-105">
               
-              <img
-                src={event.image}
-                alt={event.title}
-                className="w-full h-40 object-cover rounded-lg mb-4 transition-transform hover:scale-105"
-              />
+              <div className="w-full h-48 overflow-hidden">
+                <img
+                  src={event.image}
+                  alt={event.title}
+                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                />
+              </div>
               
-              <h3 className="text-2xl font-semibold text-[#006D5B] mb-2">{event.title}</h3>
-              <p className="text-gray-500 mb-4">{formatEventDate(event.date)}</p>
-              <p className="text-gray-700 mb-4">{event.description}</p>
-              <p className="text-sm text-gray-600 mb-4"><strong>Location:</strong> {event.location || 'Online'}</p>
+              <div className="p-6 flex flex-col justify-between flex-grow">
+                <h3 className="text-2xl font-semibold text-[#006D5B] mb-2">{event.title}</h3>
+                <p className="text-gray-500 mb-2">{formatEventDate(event.date)}</p>
+                <p className="text-gray-700 mb-4">{event.description}</p>
+                <p className="text-sm text-gray-600"><strong>Location:</strong> {event.location || 'Online'}</p>
+              </div>
             </div>
           ))}
         </div>
