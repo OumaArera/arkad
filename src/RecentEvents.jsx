@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Events.css';
 
-const RECENT_EVENTS_URL = "https://arkad-server.onrender.com/users/activities";
+const RECENT_EVENTS_URL = "https://arkad-server.onrender.com/users/achievement";
 
 const RecentEvents = () => {
   const [recentEvents, setRecentEvents] = useState([]);
