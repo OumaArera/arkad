@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSwipeable } from 'react-swipeable';  // Library to handle swipe gestures
+import { useSwipeable } from 'react-swipeable';
 
 const MEDIA_URL = "https://arkad-server.onrender.com/users/media";
 
@@ -33,7 +33,6 @@ const Media = () => {
 
   const getMedia = async () => {
     setLoading(true);
-
     try {
       const response = await fetch(MEDIA_URL, {
         method: "GET",
@@ -43,7 +42,7 @@ const Media = () => {
       if (result.success) {
         setMediaData(result.data);
         setImageIndexes(result.data.reduce((acc, item) => {
-          acc[item.id] = 0; // Start each item's image index at 0
+          acc[item.id] = 0;
           return acc;
         }, {}));
       } else {
@@ -90,7 +89,6 @@ const Media = () => {
 
   return (
     <div className="p-6">
-      <br />
       <h2 className="text-4xl font-bold text-[#006D5B] mb-8 text-center">Media Gallery</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {currentItems.map((item) => (
@@ -122,27 +120,35 @@ const SwipeableMediaItem = ({ item, imageIndex, onSwipe }) => {
   const handlers = useSwipeable({
     onSwipedLeft: onSwipe,
     onSwipedRight: onSwipe,
-    trackMouse: true,  // Allow dragging on desktop
+    trackMouse: true,
   });
 
   return (
     <div
       {...handlers}
       className="bg-white shadow-lg rounded-lg overflow-hidden relative"
-      style={{ width: '100%', height: '300px' }}
+      style={{ width: '100%', height: '350px' }}
     >
-      <div className="relative w-full h-full flex items-center justify-center">
+      {/* Image with swipe icons and transition effect */}
+      <div className="relative w-full h-4/5 flex items-center justify-center transition-transform duration-500 ease-in-out">
         <img
           src={item.media[imageIndex]}
           alt={`Media ${item.id}`}
           className="object-cover w-full h-full"
+          style={{
+            transition: 'transform 0.5s ease-in-out',
+            transform: `translateX(-${imageIndex * 100}%)`,
+          }}
         />
-        <div className="absolute bottom-0 w-full px-4 py-3 text-center text-white text-lg bg-gradient-to-t from-black/70 via-black/30 to-transparent">
-          <div className="inline-flex items-center justify-center text-[#FFD700] animate-pulse">
-            <span className="material-icons text-lg mr-2">balloon</span>
-            {item.description}
-          </div>
+        <div className="absolute inset-0 flex items-center justify-between px-4">
+          <span className="material-icons text-white opacity-60">arrow_back_ios</span>
+          <span className="material-icons text-white opacity-60">arrow_forward_ios</span>
         </div>
+      </div>
+
+      {/* Static description below the image */}
+      <div className="p-4 text-center text-[#006D5B] text-lg font-semibold">
+        {item.description}
       </div>
     </div>
   );
