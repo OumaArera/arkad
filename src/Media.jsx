@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import "./Events.css";
 
 const MEDIA_URL = "https://arkad-server.onrender.com/users/media";
 
@@ -17,7 +16,6 @@ const Media = () => {
   }, []);
 
   useEffect(() => {
-    // Set up interval to change images every 20 seconds
     const interval = setInterval(() => {
       setImageIndexes((prevIndexes) => {
         const newIndexes = { ...prevIndexes };
@@ -89,19 +87,20 @@ const Media = () => {
         {currentItems.map((item) => (
           <div
             key={item.id}
-            className="bg-white shadow-lg rounded-lg overflow-hidden"
+            className="bg-white shadow-lg rounded-lg overflow-hidden relative"
             style={{ width: '100%', height: '300px' }}  // Set a consistent card size
           >
             <div className="relative w-full h-full flex items-center justify-center">
               <img
                 src={item.media[imageIndexes[item.id]]}  // Display the current image based on the index
                 alt={`Media ${item.id}`}
-                className="object-contain w-full h-full"  // Ensure full image display
+                className="object-cover w-full h-full"  // Ensure full image display
               />
               <div
-                className="absolute bottom-0 w-full bg-white bg-opacity-80 text-[#006D5B] px-4 py-2 text-center"
+                className="absolute bottom-0 w-full bg-gradient-to-t from-black/60 to-transparent text-white px-4 py-3 text-center transition-opacity duration-500"
+                style={{ height: '50%' }}
               >
-                <p className="text-sm">{item.description}</p>
+                <p className="text-lg font-semibold animate-pulse">{item.description}</p>
               </div>
             </div>
           </div>
