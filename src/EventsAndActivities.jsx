@@ -114,12 +114,14 @@ const EventsAndActivities = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayedEvents.map((event) => (
-            <div key={event.id} className="bg-white shadow-lg rounded-lg p-4 transition-transform transform hover:scale-105 hover:shadow-xl">
-              <img
-                src={event.image}
-                alt={event.description}
-                className="w-full h-40 object-cover rounded-lg mb-4"
-              />
+            <div key={event.id} className="bg-white shadow-lg rounded-lg p-4 transition-transform transform hover:scale-105 hover:shadow-xl" style={{ height: '450px' }}>
+              <div className="w-full h-40 mb-4 overflow-hidden rounded-lg">
+                <img
+                  src={event.image}
+                  alt={event.description}
+                  className="w-full h-full object-contain"  // Full image display without cutting
+                />
+              </div>
               <h3 className="text-xl font-semibold mb-2">{event.title}</h3>
               <p className="text-gray-600 mb-2"><strong>Location:</strong> {event.venue}</p>
               <p className="text-gray-600 mb-2">{event.description}</p>
