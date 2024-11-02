@@ -100,7 +100,7 @@ const Media = () => {
                 className="absolute bottom-0 w-full bg-gradient-to-t from-black/60 to-transparent text-white px-4 py-3 text-center transition-opacity duration-500"
                 style={{ height: '50%' }}
               >
-                <p className="text-lg font-semibold animate-pulse">{item.description}</p>
+                <p className="text-lg bg-orange-600 font-semibold animate-pulse">{item.description}</p>
               </div>
             </div>
           </div>
