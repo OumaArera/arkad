@@ -1,51 +1,58 @@
 import React, { useState, useEffect } from 'react';
-import CryptoJS from 'crypto-js';  
-import "./Events.css";     
+import "./Events.css";
 
 const MEDIA_URL = "https://arkad-server.onrender.com/users/media";
-const secretKey = process.env.REACT_APP_SECRET_KEY; 
 
 const Media = () => {
   const [mediaData, setMediaData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = window.innerWidth >= 768 ? 3 : 1; 
+  const itemsPerPage = window.innerWidth >= 768 ? 3 : 1;
   const totalPages = Math.ceil(mediaData.length / itemsPerPage);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [imageIndexes, setImageIndexes] = useState({});
 
   useEffect(() => {
     getMedia();
   }, []);
 
+  useEffect(() => {
+    // Set up interval to change images every 20 seconds
+    const interval = setInterval(() => {
+      setImageIndexes((prevIndexes) => {
+        const newIndexes = { ...prevIndexes };
+        mediaData.forEach((item) => {
+          const currentIndex = newIndexes[item.id] || 0;
+          newIndexes[item.id] = (currentIndex + 1) % item.media.length;
+        });
+        return newIndexes;
+      });
+    }, 20000);
+
+    return () => clearInterval(interval);
+  }, [mediaData]);
+
   const getMedia = async () => {
-    if (!secretKey) return;
     setLoading(true);
 
     try {
       const response = await fetch(MEDIA_URL, {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        }
+        headers: { "Content-Type": "application/json" },
       });
       const result = await response.json();
       if (result.success) {
-        const { iv, ciphertext } = result.data;
-        const decryptedData = CryptoJS.AES.decrypt(ciphertext, CryptoJS.enc.Utf8.parse(secretKey), {
-          iv: CryptoJS.enc.Hex.parse(iv),
-          padding: CryptoJS.pad.Pkcs7,
-          mode: CryptoJS.mode.CBC,
-        }).toString(CryptoJS.enc.Utf8);
-
-        const parsedData = JSON.parse(decryptedData);
-        setMediaData(parsedData);
+        setMediaData(result.data);
+        setImageIndexes(result.data.reduce((acc, item) => {
+          acc[item.id] = 0; // Start each item's image index at 0
+          return acc;
+        }, {}));
       } else {
         setError(result.message);
         setTimeout(() => setError(""), 5000);
       }
-      
     } catch (error) {
-      setError('Error fetching media data: ', error);  
+      setError('Error fetching media data');
       setTimeout(() => setError(""), 5000);
     } finally {
       setLoading(false);
@@ -83,23 +90,18 @@ const Media = () => {
           <div
             key={item.id}
             className="bg-white shadow-lg rounded-lg overflow-hidden"
+            style={{ width: '100%', height: '300px' }}  // Set a consistent card size
           >
-            <div className="relative">
-              {item.media.map((imageUrl, index) => (
-                <img
-                  key={index}
-                  src={imageUrl}
-                  alt={`Media ${index + 1}`}
-                  className="w-40 h-60 object-cover transform transition-transform hover:scale-105 mb-2"
-                />
-              ))}
+            <div className="relative w-full h-full flex items-center justify-center">
+              <img
+                src={item.media[imageIndexes[item.id]]}  // Display the current image based on the index
+                alt={`Media ${item.id}`}
+                className="object-contain w-full h-full"  // Ensure full image display
+              />
               <div
-                className="bg-white text-[#006D5B] px-4 py-2 rounded-t-lg"
-                style={{
-                  width: '100%',
-                }}
+                className="absolute bottom-0 w-full bg-white bg-opacity-80 text-[#006D5B] px-4 py-2 text-center"
               >
-                <p className="text-center text-sm">{item.description}</p>
+                <p className="text-sm">{item.description}</p>
               </div>
             </div>
           </div>
