@@ -69,7 +69,6 @@ const RecentEvents = () => {
               />
               
               <h3 className="text-2xl font-semibold text-[#006D5B] mb-2">{event.title}</h3>
-              <p className="text-sm text-gray-600 italic mb-2">Hosted by: {event.organizer || 'Unknown Organizer'}</p>
               <p className="text-gray-500 mb-4">{formatEventDate(event.date)}</p>
               <p className="text-gray-700 mb-4">{event.description}</p>
               <p className="text-sm text-gray-600 mb-4"><strong>Location:</strong> {event.location || 'Online'}</p>
