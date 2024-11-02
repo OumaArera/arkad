@@ -25,7 +25,7 @@ const Media = () => {
         });
         return newIndexes;
       });
-    }, 20000);
+    }, 5000);  // Change images every 5 seconds
 
     return () => clearInterval(interval);
   }, [mediaData]);
@@ -66,6 +66,20 @@ const Media = () => {
     setCurrentPage(pageIndex);
   };
 
+  const handleSwipe = (id, direction) => {
+    setImageIndexes((prevIndexes) => {
+      const newIndexes = { ...prevIndexes };
+      const currentIndex = newIndexes[id] || 0;
+      const totalImages = mediaData.find((item) => item.id === id).media.length;
+
+      newIndexes[id] = direction === 'next'
+        ? (currentIndex + 1) % totalImages
+        : (currentIndex - 1 + totalImages) % totalImages;
+
+      return newIndexes;
+    });
+  };
+
   if (loading) {
     return (
       <div className="loading-bubble-wrapper">
@@ -88,31 +102,48 @@ const Media = () => {
           <div
             key={item.id}
             className="bg-white shadow-lg rounded-lg overflow-hidden relative"
-            style={{ width: '100%', height: '300px' }}  // Set a consistent card size
+            style={{ width: '100%', height: '300px' }}
           >
             <div className="relative w-full h-full flex items-center justify-center">
               <img
-                src={item.media[imageIndexes[item.id]]}  // Display the current image based on the index
+                src={item.media[imageIndexes[item.id]]}
                 alt={`Media ${item.id}`}
-                className="object-cover w-full h-full"  // Ensure full image display
+                className="object-cover w-full h-full"
               />
               <div
-                className="absolute bottom-0 w-full bg-gradient-to-t from-black/60 to-transparent text-white px-4 py-3 text-center transition-opacity duration-500"
+                className="absolute bottom-0 w-full bg-gradient-to-t from-black/60 to-transparent text-white px-4 py-3 text-center"
                 style={{ height: '50%' }}
               >
-                <p className="text-2xl bg-orange-600 font-semibold animate-pulse">{item.description}</p>
+                <p className="text-2xl font-semibold text-green-500">{item.description}</p>
               </div>
+            </div>
+            <div className="absolute top-1/2 left-2 transform -translate-y-1/2">
+              <button
+                onClick={() => handleSwipe(item.id, 'prev')}
+                className="text-white bg-gray-700 rounded-full p-2"
+              >
+                ◀
+              </button>
+            </div>
+            <div className="absolute top-1/2 right-2 transform -translate-y-1/2">
+              <button
+                onClick={() => handleSwipe(item.id, 'next')}
+                className="text-white bg-gray-700 rounded-full p-2"
+              >
+                ▶
+              </button>
             </div>
           </div>
         ))}
       </div>
-      {/* Pagination controls */}
       <div className="flex justify-center mt-6">
         {Array.from({ length: totalPages }).map((_, pageIndex) => (
           <button
             key={pageIndex}
             onClick={() => goToPage(pageIndex)}
-            className={`mx-2 px-4 py-2 rounded-full ${currentPage === pageIndex ? 'bg-[#FFD700] text-white' : 'bg-gray-300 text-gray-700'} transition-colors`}
+            className={`mx-2 px-4 py-2 rounded-full ${
+              currentPage === pageIndex ? 'bg-[#FFD700] text-white' : 'bg-gray-300 text-gray-700'
+            } transition-colors`}
           >
             {pageIndex + 1}
           </button>
