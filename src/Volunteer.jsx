@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import CryptoJS from 'crypto-js';
 
-const secretKey = process.env.REACT_APP_SECRET_KEY;
+
 const VOLUNTEER_URL = "https://arkad-server.onrender.com/users/volunteer";
 
 const Volunteer = ({ activityId }) => {
@@ -26,7 +25,7 @@ const Volunteer = ({ activityId }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!secretKey || !activityId) return;
+    if (!activityId) return;
 
     const { fullName, phoneNumber, email } = formData;
 
@@ -50,21 +49,12 @@ const Volunteer = ({ activityId }) => {
     };
 
     try {
-      const dataStr = JSON.stringify(data);
-      const iv = CryptoJS.lib.WordArray.random(16).toString(CryptoJS.enc.Hex);
-      const encryptedData = CryptoJS.AES.encrypt(dataStr, CryptoJS.enc.Utf8.parse(secretKey), {
-        iv: CryptoJS.enc.Hex.parse(iv),
-        padding: CryptoJS.pad.Pkcs7,
-        mode: CryptoJS.mode.CBC,
-      }).toString();
-
-      const payload = { iv, ciphertext: encryptedData };
       const response = await fetch(VOLUNTEER_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(data)
       });
 
       const result = await response.json();

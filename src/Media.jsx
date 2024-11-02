@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSwipeable } from 'react-swipeable';  // Library to handle swipe gestures
 
 const MEDIA_URL = "https://arkad-server.onrender.com/users/media";
 
@@ -25,7 +26,7 @@ const Media = () => {
         });
         return newIndexes;
       });
-    }, 20000);
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [mediaData]);
@@ -57,6 +58,14 @@ const Media = () => {
     }
   };
 
+  const handleSwipe = (item) => {
+    setImageIndexes((prevIndexes) => {
+      const newIndexes = { ...prevIndexes };
+      newIndexes[item.id] = (newIndexes[item.id] + 1) % item.media.length;
+      return newIndexes;
+    });
+  };
+
   const currentItems = mediaData.slice(
     currentPage * itemsPerPage,
     (currentPage + 1) * itemsPerPage
@@ -85,25 +94,12 @@ const Media = () => {
       <h2 className="text-4xl font-bold text-[#006D5B] mb-8 text-center">Media Gallery</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {currentItems.map((item) => (
-          <div
+          <SwipeableMediaItem
             key={item.id}
-            className="bg-white shadow-lg rounded-lg overflow-hidden relative"
-            style={{ width: '100%', height: '300px' }}  // Set a consistent card size
-          >
-            <div className="relative w-full h-full flex items-center justify-center">
-              <img
-                src={item.media[imageIndexes[item.id]]}  // Display the current image based on the index
-                alt={`Media ${item.id}`}
-                className="object-cover w-full h-full"  // Ensure full image display
-              />
-              <div
-                className="absolute bottom-0 w-full bg-gradient-to-t from-black/60 to-transparent text-white px-4 py-3 text-center transition-opacity duration-500"
-                style={{ height: '50%' }}
-              >
-                <p className="text-2xl bg-orange-600 font-semibold animate-pulse">{item.description}</p>
-              </div>
-            </div>
-          </div>
+            item={item}
+            imageIndex={imageIndexes[item.id]}
+            onSwipe={() => handleSwipe(item)}
+          />
         ))}
       </div>
       {/* Pagination controls */}
@@ -117,6 +113,36 @@ const Media = () => {
             {pageIndex + 1}
           </button>
         ))}
+      </div>
+    </div>
+  );
+};
+
+const SwipeableMediaItem = ({ item, imageIndex, onSwipe }) => {
+  const handlers = useSwipeable({
+    onSwipedLeft: onSwipe,
+    onSwipedRight: onSwipe,
+    trackMouse: true,  // Allow dragging on desktop
+  });
+
+  return (
+    <div
+      {...handlers}
+      className="bg-white shadow-lg rounded-lg overflow-hidden relative"
+      style={{ width: '100%', height: '300px' }}
+    >
+      <div className="relative w-full h-full flex items-center justify-center">
+        <img
+          src={item.media[imageIndex]}
+          alt={`Media ${item.id}`}
+          className="object-cover w-full h-full"
+        />
+        <div className="absolute bottom-0 w-full px-4 py-3 text-center text-white text-lg bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+          <div className="inline-flex items-center justify-center text-[#FFD700] animate-pulse">
+            <span className="material-icons text-lg mr-2">balloon</span>
+            {item.description}
+          </div>
+        </div>
       </div>
     </div>
   );
