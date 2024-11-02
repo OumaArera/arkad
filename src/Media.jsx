@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useSwipeable } from 'react-swipeable';
 
 const MEDIA_URL = "https://arkad-server.onrender.com/users/media";
 
@@ -26,13 +25,14 @@ const Media = () => {
         });
         return newIndexes;
       });
-    }, 5000);
+    }, 20000);
 
     return () => clearInterval(interval);
   }, [mediaData]);
 
   const getMedia = async () => {
     setLoading(true);
+
     try {
       const response = await fetch(MEDIA_URL, {
         method: "GET",
@@ -42,7 +42,7 @@ const Media = () => {
       if (result.success) {
         setMediaData(result.data);
         setImageIndexes(result.data.reduce((acc, item) => {
-          acc[item.id] = 0;
+          acc[item.id] = 0; // Start each item's image index at 0
           return acc;
         }, {}));
       } else {
@@ -55,18 +55,6 @@ const Media = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleSwipe = (item, direction) => {
-    setImageIndexes((prevIndexes) => {
-      const newIndexes = { ...prevIndexes };
-      if (direction === "left") {
-        newIndexes[item.id] = (newIndexes[item.id] + 1) % item.media.length;
-      } else if (direction === "right") {
-        newIndexes[item.id] = (newIndexes[item.id] - 1 + item.media.length) % item.media.length;
-      }
-      return newIndexes;
-    });
   };
 
   const currentItems = mediaData.slice(
@@ -93,16 +81,29 @@ const Media = () => {
 
   return (
     <div className="p-6">
+      <br />
       <h2 className="text-4xl font-bold text-[#006D5B] mb-8 text-center">Media Gallery</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {currentItems.map((item) => (
-          <SwipeableMediaItem
+          <div
             key={item.id}
-            item={item}
-            imageIndex={imageIndexes[item.id]}
-            onSwipeLeft={() => handleSwipe(item, "left")}
-            onSwipeRight={() => handleSwipe(item, "right")}
-          />
+            className="bg-white shadow-lg rounded-lg overflow-hidden relative"
+            style={{ width: '100%', height: '300px' }}  // Set a consistent card size
+          >
+            <div className="relative w-full h-full flex items-center justify-center">
+              <img
+                src={item.media[imageIndexes[item.id]]}  // Display the current image based on the index
+                alt={`Media ${item.id}`}
+                className="object-cover w-full h-full"  // Ensure full image display
+              />
+              <div
+                className="absolute bottom-0 w-full bg-gradient-to-t from-black/60 to-transparent text-white px-4 py-3 text-center transition-opacity duration-500"
+                style={{ height: '50%' }}
+              >
+                <p className="text-2xl bg-orange-600 font-semibold animate-pulse">{item.description}</p>
+              </div>
+            </div>
+          </div>
         ))}
       </div>
       {/* Pagination controls */}
@@ -116,43 +117,6 @@ const Media = () => {
             {pageIndex + 1}
           </button>
         ))}
-      </div>
-    </div>
-  );
-};
-
-const SwipeableMediaItem = ({ item, imageIndex, onSwipeLeft, onSwipeRight }) => {
-  const handlers = useSwipeable({
-    onSwipedLeft: onSwipeLeft,
-    onSwipedRight: onSwipeRight,
-    trackMouse: true,
-  });
-
-  return (
-    <div
-      {...handlers}
-      className="bg-white shadow-lg rounded-lg overflow-hidden relative"
-      style={{ width: '100%', height: '350px' }}
-    >
-      {/* Image with swipe icons and transition effect */}
-      <div className="relative w-full h-4/5 flex items-center justify-center transition-transform duration-500 ease-in-out">
-        <img
-          src={item.media[imageIndex]}
-          alt={`Media ${item.id}`}
-          className="object-cover w-full h-full transition-transform"
-          style={{
-            transform: `translateX(-${imageIndex * 100}%)`,
-          }}
-        />
-        <div className="absolute inset-0 flex items-center justify-between px-4">
-          <span onClick={onSwipeRight} className="material-icons text-white cursor-pointer opacity-80">arrow_back_ios</span>
-          <span onClick={onSwipeLeft} className="material-icons text-white cursor-pointer opacity-80">arrow_forward_ios</span>
-        </div>
-      </div>
-
-      {/* Static description below the image */}
-      <div className="p-4 text-center text-[#006D5B] text-lg font-semibold">
-        {item.description}
       </div>
     </div>
   );
