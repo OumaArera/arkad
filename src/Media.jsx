@@ -57,10 +57,14 @@ const Media = () => {
     }
   };
 
-  const handleSwipe = (item) => {
+  const handleSwipe = (item, direction) => {
     setImageIndexes((prevIndexes) => {
       const newIndexes = { ...prevIndexes };
-      newIndexes[item.id] = (newIndexes[item.id] + 1) % item.media.length;
+      if (direction === "left") {
+        newIndexes[item.id] = (newIndexes[item.id] + 1) % item.media.length;
+      } else if (direction === "right") {
+        newIndexes[item.id] = (newIndexes[item.id] - 1 + item.media.length) % item.media.length;
+      }
       return newIndexes;
     });
   };
@@ -96,7 +100,8 @@ const Media = () => {
             key={item.id}
             item={item}
             imageIndex={imageIndexes[item.id]}
-            onSwipe={() => handleSwipe(item)}
+            onSwipeLeft={() => handleSwipe(item, "left")}
+            onSwipeRight={() => handleSwipe(item, "right")}
           />
         ))}
       </div>
@@ -116,10 +121,10 @@ const Media = () => {
   );
 };
 
-const SwipeableMediaItem = ({ item, imageIndex, onSwipe }) => {
+const SwipeableMediaItem = ({ item, imageIndex, onSwipeLeft, onSwipeRight }) => {
   const handlers = useSwipeable({
-    onSwipedLeft: onSwipe,
-    onSwipedRight: onSwipe,
+    onSwipedLeft: onSwipeLeft,
+    onSwipedRight: onSwipeRight,
     trackMouse: true,
   });
 
@@ -134,15 +139,14 @@ const SwipeableMediaItem = ({ item, imageIndex, onSwipe }) => {
         <img
           src={item.media[imageIndex]}
           alt={`Media ${item.id}`}
-          className="object-cover w-full h-full"
+          className="object-cover w-full h-full transition-transform"
           style={{
-            transition: 'transform 0.5s ease-in-out',
             transform: `translateX(-${imageIndex * 100}%)`,
           }}
         />
         <div className="absolute inset-0 flex items-center justify-between px-4">
-          <span className="material-icons text-white opacity-60">arrow_back_ios</span>
-          <span className="material-icons text-white opacity-60">arrow_forward_ios</span>
+          <span onClick={onSwipeRight} className="material-icons text-white cursor-pointer opacity-80">arrow_back_ios</span>
+          <span onClick={onSwipeLeft} className="material-icons text-white cursor-pointer opacity-80">arrow_forward_ios</span>
         </div>
       </div>
 
