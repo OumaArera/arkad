@@ -40,6 +40,15 @@ const Header = () => {
                 Home
               </Link>
               <Link
+                to="/about-us"
+                onClick={closeMenu}
+                className={`text-lg ${
+                  location.pathname === '/about-us' ? 'text-yellow-500 font-semibold' : 'text-white hover:text-yellow-500'
+                }`}
+              >
+                About Us
+              </Link>
+              <Link
                 to="/events-activities"
                 onClick={closeMenu}
                 className={`text-lg ${
@@ -56,15 +65,6 @@ const Header = () => {
                 }`}
               >
                 Gallery
-              </Link>
-              <Link
-                to="/about-us"
-                onClick={closeMenu}
-                className={`text-lg ${
-                  location.pathname === '/about-us' ? 'text-yellow-500 font-semibold' : 'text-white hover:text-yellow-500'
-                }`}
-              >
-                About Us
               </Link>
               </nav>
           </div>
